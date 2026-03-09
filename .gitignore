@@ -11,6 +11,9 @@ playwright-report/
 # Logs
 *.log
 
+# Local config (sensitive - contains chat IDs)
+scripts/.local_config
+
 # Editor
 .vscode/
 .idea/

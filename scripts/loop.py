@@ -31,8 +31,15 @@ ARTIFACTS = {
     "bugs": PROJECT_DIR / "BUGS.md"
 }
 MAX_RETRIES = 3
-TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+
+# Load local config (not committed to git)
+LOCAL_CONFIG = PROJECT_DIR / "scripts" / ".local_config"
+TELEGRAM_CHAT_ID = None
+
+if LOCAL_CONFIG.exists():
+    for line in LOCAL_CONFIG.read_text().strip().split("\n"):
+        if line.startswith("TELEGRAM_CHAT_ID="):
+            TELEGRAM_CHAT_ID = line.split("=", 1)[1].strip()
 
 
 class Logger:
@@ -56,33 +63,36 @@ class Logger:
 
 
 class TelegramNotifier:
-    """Sends progress notifications to Telegram."""
+    """Sends progress notifications to Telegram via OpenClaw message tool."""
     
     def __init__(self):
-        self.token = TELEGRAM_BOT_TOKEN
-        self.chat_id = TELEGRAM_CHAT_ID
-        self.enabled = bool(self.token and self.chat_id)
+        self.enabled = bool(TELEGRAM_CHAT_ID)
     
     def send(self, message: str):
+        """Send message using OpenClaw's message tool."""
         if not self.enabled:
             Logger().info(f"[TELEGRAM] {message}")
             return
         
-        # Use curl to send message (simpler than requests dependency)
-        url = f"https://api.telegram.org/bot{self.token}/sendMessage"
-        data = {
-            "chat_id": self.chat_id,
-            "text": message,
-            "parse_mode": "Markdown"
-        }
-        
+        # Use openclaw CLI to send message (reads chat ID from config)
         cmd = [
-            "curl", "-s", "-X", "POST", url,
-            "-H", "Content-Type: application/json",
-            "-d", json.dumps(data)
+            "openclaw", "message", "send",
+            "--channel", "telegram",
+            "--target", TELEGRAM_CHAT_ID,
+            "--message", message
         ]
         
         try:
+            result = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=30,
+                env={**os.environ, "PATH": os.environ.get("PATH", "") + ":/home/chaiyawutk/.nvm/versions/node/v24.14.0/bin"}
+            )
+            if result.returncode == 0:
+                Logger().info(f"Telegram sent: {message[:40]}...")
+            else:
+                Logger().info(f"[TELEGRAM] {message}")
+        except Exception as e:
+            Logger().info(f"[TELEGRAM] {message}")
             subprocess.run(cmd, check=True, capture_output=True, timeout=10)
             Logger().info(f"Telegram notification sent: {message[:50]}...")
         except Exception as e:
