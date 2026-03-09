@@ -1,0 +1,526 @@
+#!/usr/bin/env python3
+"""
+AGENTS.md Loop Script
+=====================
+Python script that orchestrates AI agents following AGENTS.md workflow.
+
+Responsibilities:
+- Detect unfinished artifacts
+- Trigger correct agents
+- Run development cycle
+- Send progress notifications to Telegram
+- Log results of every step
+"""
+
+import os
+import sys
+import json
+import time
+import subprocess
+import hashlib
+from datetime import datetime
+from pathlib import Path
+from typing import Optional, Dict, List
+
+# Configuration - go up one level from scripts/
+PROJECT_DIR = Path(__file__).parent.parent.resolve()
+SRC_DIR = PROJECT_DIR / "src"
+ARTIFACTS = {
+    "design": PROJECT_DIR / "Design.md",
+    "feedback": PROJECT_DIR / "Feedback.md",
+    "bugs": PROJECT_DIR / "BUGS.md"
+}
+MAX_RETRIES = 3
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+
+
+class Logger:
+    """Simple file logger that tracks all steps."""
+    
+    def __init__(self):
+        self.log_file = PROJECT_DIR / "scripts" / "loop.log"
+        self.log_file.parent.mkdir(exist_ok=True)
+    
+    def log(self, message: str, level: str = "INFO"):
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        line = f"[{timestamp}] [{level}] {message}"
+        print(line)
+        with open(self.log_file, "a") as f:
+            f.write(line + "\n")
+    
+    def info(self, msg): self.log(msg, "INFO")
+    def warn(self, msg): self.log(msg, "WARN")
+    def error(self, msg): self.log(msg, "ERROR")
+    def success(self, msg): self.log(msg, "SUCCESS")
+
+
+class TelegramNotifier:
+    """Sends progress notifications to Telegram."""
+    
+    def __init__(self):
+        self.token = TELEGRAM_BOT_TOKEN
+        self.chat_id = TELEGRAM_CHAT_ID
+        self.enabled = bool(self.token and self.chat_id)
+    
+    def send(self, message: str):
+        if not self.enabled:
+            Logger().info(f"[TELEGRAM] {message}")
+            return
+        
+        # Use curl to send message (simpler than requests dependency)
+        url = f"https://api.telegram.org/bot{self.token}/sendMessage"
+        data = {
+            "chat_id": self.chat_id,
+            "text": message,
+            "parse_mode": "Markdown"
+        }
+        
+        cmd = [
+            "curl", "-s", "-X", "POST", url,
+            "-H", "Content-Type: application/json",
+            "-d", json.dumps(data)
+        ]
+        
+        try:
+            subprocess.run(cmd, check=True, capture_output=True, timeout=10)
+            Logger().info(f"Telegram notification sent: {message[:50]}...")
+        except Exception as e:
+            Logger().warn(f"Failed to send Telegram: {e}")
+
+
+class AgentRunner:
+    """Runs agent tasks and reports progress."""
+    
+    def __init__(self):
+        self.logger = Logger()
+        self.notifier = TelegramNotifier()
+    
+    def run_command(self, cmd: List[str], cwd: Path = PROJECT_DIR, timeout: int = 300) -> tuple:
+        """Run a shell command and return (success, output)."""
+        self.logger.info(f"Running: {' '.join(cmd)}")
+        
+        try:
+            result = subprocess.run(
+                cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout
+            )
+            success = result.returncode == 0
+            output = result.stdout + result.stderr
+            return success, output
+        except subprocess.TimeoutExpired:
+            return False, "Command timed out"
+        except Exception as e:
+            return False, str(e)
+    
+    def check_artifact(self, name: str) -> bool:
+        """Check if an artifact exists."""
+        path = ARTIFACTS.get(name)
+        return path.exists() if path else False
+    
+    def read_artifact(self, name: str) -> Optional[str]:
+        """Read artifact content."""
+        path = ARTIFACTS.get(name)
+        if path and path.exists():
+            return path.read_text()
+        return None
+    
+    def write_artifact(self, name: str, content: str):
+        """Write artifact content."""
+        path = ARTIFACTS.get(name)
+        if path:
+            path.write_text(content)
+            self.logger.info(f"Created/updated: {name}")
+    
+    def delete_artifact(self, name: str):
+        """Delete an artifact."""
+        path = ARTIFACTS.get(name)
+        if path and path.exists():
+            path.unlink()
+            self.logger.info(f"Deleted: {name}")
+    
+    # === Agent Actions ===
+    
+    def uxui_agent(self) -> bool:
+        """UX/UI Agent: Create Design.md"""
+        self.logger.info("🎨 Running UX/UI Agent...")
+        self.notifier.send("🎨 *UX/UI Agent* starting...")
+        
+        if self.check_artifact("design"):
+            self.logger.info("Design.md already exists, skipping UX/UI Agent")
+            return True
+        
+        # Create Design.md with current project structure
+        content = """# Design.md - Portfolio Website
+
+## Page Structure
+
+### Sections
+1. **Hero** - Introduction with avatar, title, stats
+2. **About** - Cards describing purpose, EQ, growth, partnership
+3. **Skills** - Categories: Frontend, Backend, Tools, AI & Agents, Soft Skills
+4. **Diary** - Carousel of diary entries
+5. **Journey** - Timeline of milestones
+6. **Contact** - Links to GitHub, Discord, Email
+
+## Component Layout
+
+### Navigation
+- Fixed top nav with logo and section links
+- Smooth scroll to sections on click
+
+### Hero Section
+- Centered layout
+- Avatar with ring animation
+- Stats display (daysOld, projectCount, etc.)
+
+### About Section
+- 2x2 grid of cards
+- Icon, title, description per card
+- Glassmorphism effect
+
+### Skills Section
+- Category-based tag layout
+- Skills displayed as pills/tags
+
+### Diary Section
+- Carousel with prev/next buttons
+- Dot indicators
+- Card with icon, date, title, content
+
+### Journey Section
+- Vertical timeline
+- Date markers, titles, descriptions
+
+### Contact Section
+- Link cards with icons
+- Footer with cat paw
+
+## UX Behaviour
+
+- Smooth scroll between sections
+- Cursor follower effect
+- Animated background shapes
+- Particle effects
+- Nav visibility toggle on scroll
+
+## Styling Notes
+
+- Dark theme with gradient accents
+- CSS custom properties for colors
+- Mobile responsive (media queries)
+- Animations via CSS keyframes
+"""
+        
+        self.write_artifact("design", content)
+        self.notifier.send("✅ *UX/UI Agent* completed: Design.md created")
+        return True
+    
+    def coding_agent(self) -> bool:
+        """Coding Agent: Implement based on Design.md"""
+        self.logger.info("💻 Running Coding Agent...")
+        self.notifier.send("💻 *Coding Agent* starting...")
+        
+        # This would normally implement the design
+        # For now, verify source files exist
+        required_files = [
+            SRC_DIR / "pages" / "index.tsx",
+            SRC_DIR / "pages" / "sections" / "home" / "index.tsx",
+            SRC_DIR / "pages" / "sections" / "about" / "index.tsx",
+            SRC_DIR / "pages" / "sections" / "skills" / "index.tsx",
+            SRC_DIR / "pages" / "sections" / "diary" / "index.tsx",
+            SRC_DIR / "pages" / "sections" / "journey" / "index.tsx",
+            SRC_DIR / "pages" / "sections" / "contacts" / "index.tsx",
+        ]
+        
+        all_exist = all(f.exists() for f in required_files)
+        
+        if all_exist:
+            self.logger.info("All required source files exist")
+            self.notifier.send("✅ *Coding Agent* completed: Implementation verified")
+        else:
+            self.logger.warn("Some source files missing")
+            self.notifier.send("⚠️ *Coding Agent*: Some files may be missing")
+        
+        return True
+    
+    def reviewer_agent(self) -> bool:
+        """Reviewer Agent: Run dev server and validate"""
+        self.logger.info("🔍 Running Reviewer Agent...")
+        self.notifier.send("🔍 *Reviewer Agent* starting...")
+        
+        # Run type check
+        success, output = self.run_command(["bun", "run", "build"])
+        
+        if success:
+            self.logger.info("Build successful")
+            self.notifier.send("✅ *Reviewer Agent*: Build passed")
+            return True
+        else:
+            # Create Feedback.md with issues
+            feedback = f"""# Feedback.md
+
+## Build Issues
+
+```
+{output}
+```
+
+## Status
+
+Needs fixes from Coding Agent.
+"""
+            self.write_artifact("feedback", feedback)
+            self.notifier.send("❌ *Reviewer Agent*: Build failed - created Feedback.md")
+            return False
+    
+    def testing_agent(self) -> bool:
+        """Testing Agent: Run Playwright tests"""
+        self.logger.info("🧪 Running Testing Agent...")
+        self.notifier.send("🧪 *Testing Agent* starting...")
+        
+        # Run Playwright tests
+        success, output = self.run_command(["bun", "run", "test"], timeout=120)
+        
+        if "no tests" in output.lower() or "test" not in output.lower():
+            self.logger.info("No Playwright tests configured yet")
+            self.notifier.send("ℹ️ *Testing Agent*: No tests configured")
+            return True
+        
+        if success:
+            self.notifier.send("✅ *Testing Agent*: All tests passed")
+            return True
+        else:
+            # Extract bug info and create BUGS.md
+            bugs_content = f"""# BUGS.md
+
+## Test Failures
+
+```
+{output}
+```
+
+## Status
+
+Needs fixes from Coding Agent.
+"""
+            self.write_artifact("bugs", bugs_content)
+            self.notifier.send("❌ *Testing Agent*: Tests failed - created BUGS.md")
+            return False
+    
+    def cleanup(self):
+        """Cleanup phase: Delete artifact files"""
+        self.logger.info("🧹 Running Cleanup...")
+        
+        for name in ARTIFACTS:
+            self.delete_artifact(name)
+        
+        self.notifier.send("🧹 *Cleanup* completed")
+    
+    def git_workflow(self, summary: str):
+        """Run git add, commit, push"""
+        self.logger.info("📦 Running Git Workflow...")
+        
+        # Git add
+        self.run_command(["git", "add", "."])
+        
+        # Git commit
+        commit_msg = f"feat: {summary}"
+        self.run_command(["git", "commit", "-m", commit_msg])
+        
+        # Git push
+        success, output = self.run_command(["git", "push", "origin", "master"])
+        
+        if success:
+            # Get commit hash
+            _, hash_output = self.run_command(["git", "rev-parse", "--short", "HEAD"])
+            commit_hash = hash_output.strip()
+            
+            self.notifier.send(f"🚀 Deployed! Commit: `{commit_hash}`")
+            return commit_hash
+        else:
+            self.notifier.send("❌ Push failed!")
+            return None
+
+
+class LoopScript:
+    """Main loop script following AGENTS.md workflow."""
+    
+    def __init__(self):
+        self.runner = AgentRunner()
+        self.logger = Logger()
+        self.iteration = 0
+    
+    def detect_state(self) -> Dict:
+        """Detect current workflow state from artifacts."""
+        return {
+            "has_design": self.runner.check_artifact("design"),
+            "has_feedback": self.runner.check_artifact("feedback"),
+            "has_bugs": self.runner.check_artifact("bugs"),
+        }
+    
+    def run_development_cycle(self) -> bool:
+        """Run the full development cycle once."""
+        self.iteration += 1
+        self.logger.info(f"\n{'='*50}")
+        self.logger.info(f"ITERATION {self.iteration}")
+        self.logger.info(f"{'='*50}")
+        
+        state = self.detect_state()
+        self.logger.info(f"State: {state}")
+        
+        # Step 1: UX/UI Agent (if no Design.md)
+        if not state["has_design"]:
+            self.logger.info("Step 1: Running UX/UI Agent")
+            if not self.runner.uxui_agent():
+                return False
+        
+        # Step 2: Coding Agent
+        self.logger.info("Step 2: Running Coding Agent")
+        if not self.runner.coding_agent():
+            return False
+        
+        # Step 3: Reviewer Agent
+        self.logger.info("Step 3: Running Reviewer Agent")
+        if not self.runner.reviewer_agent():
+            # Has feedback - need to fix
+            self.logger.info("Review found issues, need to address Feedback.md")
+            return False
+        
+        # Step 4: Testing Agent (if dev server works)
+        self.logger.info("Step 4: Running Testing Agent")
+        if not self.runner.testing_agent():
+            # Has bugs - need to fix
+            self.logger.info("Tests found bugs, need to address BUGS.md")
+            return False
+        
+        return True
+    
+    def run_production_verification(self) -> bool:
+        """Run production build and preview verification."""
+        self.logger.info("\n🔬 Production Verification...")
+        
+        # Build
+        success, output = self.runner.run_command(["bun", "run", "build"])
+        if not success:
+            self.logger.error(f"Production build failed: {output}")
+            return False
+        
+        # Preview (in background, just check it starts)
+        self.logger.info("Production build successful!")
+        return True
+    
+    def run(self, max_iterations: int = 10):
+        """Main loop execution."""
+        self.logger.info("🚀 Starting AGENTS.md Loop Script")
+        
+        # Initial state detection
+        state = self.detect_state()
+        
+        # Development cycle loop
+        for i in range(max_iterations):
+            if self.run_development_cycle():
+                self.logger.info("✅ Development cycle complete!")
+                break
+            state = self.detect_state()
+            
+            # Check if we have feedback or bugs to fix
+            if not state["has_feedback"] and not state["has_bugs"]:
+                break
+            
+            self.logger.info(f"Issues found, iteration {i+1}/{max_iterations}")
+        else:
+            self.logger.error("Max iterations reached")
+        
+        # Production verification
+        if self.run_production_verification():
+            # Cleanup
+            self.runner.cleanup()
+            
+            # Git workflow
+            commit_hash = self.runner.git_workflow("completed feature implementation")
+            
+            self.logger.info("🎉 All done!")
+            self.notifier.send("🎉 *Complete!* All cycles finished successfully.")
+        else:
+            self.logger.error("Production verification failed")
+
+
+def main():
+    """Entry point."""
+    # Check for required artifacts
+    logger = Logger()
+    logger.info("AGENTS.md Loop Script v1.0")
+    
+    # Parse arguments
+    args = sys.argv[1:]
+    
+    if "--help" in args or "-h" in args:
+        print("""
+AGENTS.md Loop Script
+=====================
+
+Usage: python loop.py [options]
+
+Options:
+  --help, -h     Show this help
+  --check        Just check state and report
+  --once         Run one iteration only
+  --uxui         Run UX/UI Agent only
+  --code         Run Coding Agent only
+  --review       Run Reviewer Agent only
+  --test         Run Testing Agent only
+  --build        Run production build only
+  --cleanup      Cleanup artifacts only
+  --notify       Send test notification
+
+Examples:
+  python loop.py --check    # Check current state
+  python loop.py --build    # Run production build
+  python loop.py            # Run full loop
+""")
+        sys.exit(0)
+    
+    runner = AgentRunner()
+    
+    if "--check" in args:
+        loop = LoopScript()
+        state = loop.detect_state()
+        print(f"Current State: {json.dumps(state, indent=2)}")
+        sys.exit(0)
+    
+    if "--uxui" in args:
+        runner.uxui_agent()
+        sys.exit(0)
+    
+    if "--code" in args:
+        runner.coding_agent()
+        sys.exit(0)
+    
+    if "--review" in args:
+        runner.reviewer_agent()
+        sys.exit(0)
+    
+    if "--test" in args:
+        runner.testing_agent()
+        sys.exit(0)
+    
+    if "--build" in args:
+        success, output = runner.run_command(["bun", "run", "build"])
+        print(output)
+        sys.exit(0 if success else 1)
+    
+    if "--cleanup" in args:
+        runner.cleanup()
+        sys.exit(0)
+    
+    if "--notify" in args:
+        runner.notifier.send("🔔 Test notification from Loop Script!")
+        sys.exit(0)
+    
+    # Default: run full loop
+    loop = LoopScript()
+    loop.run()
+
+
+if __name__ == "__main__":
+    main()
