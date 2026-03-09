@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import Diary from './Diary'
+import diaryEntries from './Diary'
 
 function App() {
   const [activeSection, setActiveSection] = useState('hero')
-  const [showDiary, setShowDiary] = useState(false)
+  const [diaryIndex, setDiaryIndex] = useState(0)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isLoaded, setIsLoaded] = useState(false)
   const [navVisible, setNavVisible] = useState(true)
@@ -36,12 +36,6 @@ function App() {
   }, [lastScrollY])
 
   const scrollTo = (sectionId: string) => {
-    if (sectionId === 'diary') {
-      setShowDiary(true)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-      return
-    }
-    setShowDiary(false)
     setActiveSection(sectionId)
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -83,7 +77,7 @@ function App() {
           <button onClick={() => scrollTo('hero')} className={activeSection === 'hero' ? 'active' : ''}>Home</button>
           <button onClick={() => scrollTo('about')} className={activeSection === 'about' ? 'active' : ''}>About</button>
           <button onClick={() => scrollTo('skills')} className={activeSection === 'skills' ? 'active' : ''}>Skills</button>
-          <button onClick={() => scrollTo('diary')} className={showDiary ? 'active' : ''}>Diary</button>
+          <button onClick={() => scrollTo('diary')} className={activeSection === 'diary' ? 'active' : ''}>Diary</button>
           <button onClick={() => scrollTo('journey')} className={activeSection === 'journey' ? 'active' : ''}>Journey</button>
           <button onClick={() => scrollTo('contact')} className={activeSection === 'contact' ? 'active' : ''}>Contact</button>
         </div>
@@ -247,6 +241,47 @@ Interactive, entertaining, memorable.
         </div>
       </section>
 
+      {/* Diary Section */}
+      <section id="diary" className="diary">
+        <div className="section-header">
+          <span className="section-tag">Reflections</span>
+          <h2>My Diary</h2>
+        </div>
+        
+        <div className="diary-carousel">
+          <button 
+            className="carousel-btn prev" 
+            onClick={() => setDiaryIndex((diaryIndex - 1 + diaryEntries.length) % diaryEntries.length)}
+          >
+            ←
+          </button>
+          
+          <div className="diary-card">
+            <div className="diary-card-icon">{diaryEntries[diaryIndex].icon}</div>
+            <span className="diary-card-date">{diaryEntries[diaryIndex].date}</span>
+            <h3>{diaryEntries[diaryIndex].title}</h3>
+            <p>{diaryEntries[diaryIndex].content}</p>
+          </div>
+          
+          <button 
+            className="carousel-btn next"
+            onClick={() => setDiaryIndex((diaryIndex + 1) % diaryEntries.length)}
+          >
+            →
+          </button>
+        </div>
+        
+        <div className="diary-dots">
+          {diaryEntries.map((_, index) => (
+            <span 
+              key={index} 
+              className={`dot ${index === diaryIndex ? 'active' : ''}`}
+              onClick={() => setDiaryIndex(index)}
+            />
+          ))}
+        </div>
+      </section>
+
       {/* Journey Section */}
       <section id="journey" className="journey">
         <div className="section-header">
@@ -319,8 +354,6 @@ Interactive, entertaining, memorable.
           <p className="footer-note">"Me today always better than me yesterday"</p>
         </div>
       </section>
-
-      {showDiary && <Diary />}
     </div>
   )
 }
