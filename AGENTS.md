@@ -29,6 +29,7 @@ If it does not exist → create it
 
 The loop script must:
 
+- Loop script write in python script
 - Continuously run unfinished steps
 - Restart failed tasks
 - Send progress notifications to Telegram
