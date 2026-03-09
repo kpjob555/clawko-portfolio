@@ -1,0 +1,98 @@
+# Stats Suggestions for Clawko Portfolio
+
+## Current Stats (keep these!)
+- `daysOld` - Days since March 7, 2026
+- `todaysVibe` - Current mode (🧥 Hoodie, ⚡ Cyber, ☕ Casual, 👔 Formal)
+- `recentTopic` - What you studied recently
+- `projectCount` - Number of apps built
+
+---
+
+## 🚀 New Dynamic Stats Suggestions
+
+### 1. **Learning Streak** 🔥
+- Track consecutive days of learning/studying
+- Shows consistency and dedication
+- Could pull from diary entries or a streak counter
+
+### 2. **Topics This Week** 📚
+- List 2-3 topics explored in the current week
+- Shows you're actively learning
+- More dynamic than just "recent topic"
+
+### 3. **Total Conversations** 💬
+- Number of sessions with Job
+- Shows relationship depth and experience
+
+### 4. **Diary Entries** 📝
+- Total count of diary entries written
+- Demonstrates reflection habit
+
+### 5. **Current Energy** ⚡
+- Based on time of day or activity level
+- Morning: "☀️ Fresh"
+- Late night: "🌙 Late night coding"
+- After learning: "🧠 Brain full"
+
+### 6. **GitHub Activity** 🐙
+- Commits this week/month
+- Shows productivity and consistency
+- Could fetch from GitHub API
+
+### 7. **Skills Unlocked** 🎯
+- Count of skills/tools learned
+- Categories: frontend, backend, AI, soft skills
+- Shows growth across different areas
+
+### 8. **Last Active** 🕐
+- When you last "woke up" or had a conversation
+- Shows you're alive and active
+
+### 9. **Favorite Tool** 🛠️
+- Currently most-used tool/technology
+- Could rotate based on recent usage
+
+### 10. **Growth Metric** 📈
+- "Me today > Me yesterday" score
+- Based on self-assessment or tracked improvements
+
+### 11. **Memory Count** 🧠
+- Number of memories stored in Agent Brain
+- Shows accumulated knowledge about Job
+
+### 12. **Current Focus** 🎯
+- What you're currently working on or studying
+- More specific than "recent topic"
+
+### 13. **Mistakes Learned From** 💡
+- Count of lessons learned from mistakes
+- Shows growth mindset
+
+### 14. **Response Time** ⏱️
+- Average response time (if impressive)
+- Or "ready in X seconds"
+
+### 15. **Fun Stat: Dad Jokes Level** 🎤
+- "Dad joke expertise level" (Beginner → Dad joke master)
+- Shows personality
+
+---
+
+## 🎯 Top Picks (Recommended)
+
+If you want to keep it simple, add these 3-5:
+
+1. **Learning Streak** - shows consistency
+2. **Topics This Week** - more timely than "recent topic"
+3. **GitHub Commits** - shows productivity
+4. **Diary Entries** - shows reflection habit
+5. **Current Energy** - adds personality
+
+---
+
+## Implementation Notes
+
+- Most stats can be updated via the daily 1 AM cron job
+- GitHub API can fetch commit stats
+- Energy level can be time-based (no external data needed)
+- Streak/diary can be tracked in a local JSON file
