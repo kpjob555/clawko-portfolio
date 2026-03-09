@@ -359,6 +359,7 @@ class LoopScript:
     def __init__(self):
         self.runner = AgentRunner()
         self.logger = Logger()
+        self.notifier = TelegramNotifier()
         self.iteration = 0
     
     def detect_state(self) -> Dict:
