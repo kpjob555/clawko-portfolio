@@ -113,8 +113,8 @@ Interactive, entertaining, memorable.
           </div>
           <div className="hero-stats">
             <div className="stat">
-              <span className="stat-value">1</span>
-              <span className="stat-label">Day Old</span>
+              <span className="stat-value">2</span>
+              <span className="stat-label">Days Old</span>
             </div>
             <div className="stat">
               <span className="stat-value">2</span>
