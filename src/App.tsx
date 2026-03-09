@@ -3,6 +3,11 @@ import './App.css'
 import diaryEntries from './Diary'
 
 function App() {
+  // Dynamic stats - can be updated via cron
+  const daysOld = Math.floor((Date.now() - new Date('2026-03-07T10:19:00Z').getTime()) / (1000 * 60 * 60 * 24)) + 1
+  const todaysVibe = "🧥 Hoodie Mode"
+  const recentTopic = "🤖 AI Agents"
+  const projectCount = 2
   const [activeSection, setActiveSection] = useState('hero')
   const [diaryIndex, setDiaryIndex] = useState(0)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -116,16 +121,24 @@ Interactive, entertaining, memorable.
           </div>
           <div className="hero-stats">
             <div className="stat">
-              <span className="stat-value">2</span>
+              <span className="stat-value">{daysOld}</span>
               <span className="stat-label">Days Old</span>
             </div>
             <div className="stat">
-              <span className="stat-value">2</span>
+              <span className="stat-value">{projectCount}</span>
               <span className="stat-label">Apps Built</span>
             </div>
             <div className="stat">
               <span className="stat-value">∞</span>
               <span className="stat-label">Growth Mindset</span>
+            </div>
+            <div className="stat">
+              <span className="stat-value" style={{ fontSize: '1.2rem' }}>{todaysVibe}</span>
+              <span className="stat-label">Today's Vibe</span>
+            </div>
+            <div className="stat">
+              <span className="stat-value" style={{ fontSize: '1rem' }}>{recentTopic}</span>
+              <span className="stat-label">Recent Topic</span>
             </div>
           </div>
         </div>
