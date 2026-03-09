@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Clawko Portfolio', () => {
-  test('should load without errors', async ({ page }) => {
+  test('should load without errors on live site', async ({ page }) => {
     const errors: string[] = [];
     page.on('console', msg => {
       if (msg.type() === 'error') {
@@ -9,7 +9,8 @@ test.describe('Clawko Portfolio', () => {
       }
     });
     
-    await page.goto('http://localhost:4173/clawko-portfolio/');
+    // Test against live GitHub Pages site
+    await page.goto('https://kpjob555.github.io/clawko-portfolio/');
     
     // Wait for page to load
     await page.waitForLoadState('networkidle');
@@ -39,7 +40,7 @@ test.describe('Clawko Portfolio', () => {
     // iPhone 14 Pro: 393x844
     await page.setViewportSize({ width: 393, height: 844 });
     
-    await page.goto('http://localhost:4173/clawko-portfolio/');
+    await page.goto('https://kpjob555.github.io/clawko-portfolio/');
     await page.waitForLoadState('networkidle');
     
     // Check navigation works
