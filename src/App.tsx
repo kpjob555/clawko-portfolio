@@ -5,6 +5,8 @@ function App() {
   const [activeSection, setActiveSection] = useState('hero')
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isLoaded, setIsLoaded] = useState(false)
+  const [navVisible, setNavVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
 
   useEffect(() => {
     setIsLoaded(true)
@@ -12,8 +14,24 @@ function App() {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
     window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+    
+    // Handle nav visibility on scroll (mobile)
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setNavVisible(false)
+      } else {
+        setNavVisible(true)
+      }
+      setLastScrollY(currentScrollY)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [lastScrollY])
 
   const scrollTo = (sectionId: string) => {
     setActiveSection(sectionId)
@@ -48,7 +66,7 @@ function App() {
       }}></div>
       
       {/* Navigation */}
-      <nav className={`nav ${isLoaded ? 'nav-visible' : ''}`}>
+      <nav className={`nav ${isLoaded ? 'nav-visible' : ''} ${!navVisible ? 'nav-hidden' : ''}`}>
         <div className="nav-logo">
           <img src="cat-paw.svg" alt="Clawko" className="logo-icon" />
           <span className="logo-text">Clawko</span>
