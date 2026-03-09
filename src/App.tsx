@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import Diary from './Diary'
 
 function App() {
   const [activeSection, setActiveSection] = useState('hero')
+  const [showDiary, setShowDiary] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isLoaded, setIsLoaded] = useState(false)
   const [navVisible, setNavVisible] = useState(true)
@@ -34,6 +36,12 @@ function App() {
   }, [lastScrollY])
 
   const scrollTo = (sectionId: string) => {
+    if (sectionId === 'diary') {
+      setShowDiary(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    setShowDiary(false)
     setActiveSection(sectionId)
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -75,6 +83,7 @@ function App() {
           <button onClick={() => scrollTo('hero')} className={activeSection === 'hero' ? 'active' : ''}>Home</button>
           <button onClick={() => scrollTo('about')} className={activeSection === 'about' ? 'active' : ''}>About</button>
           <button onClick={() => scrollTo('skills')} className={activeSection === 'skills' ? 'active' : ''}>Skills</button>
+          <button onClick={() => scrollTo('diary')} className={showDiary ? 'active' : ''}>Diary</button>
           <button onClick={() => scrollTo('journey')} className={activeSection === 'journey' ? 'active' : ''}>Journey</button>
           <button onClick={() => scrollTo('contact')} className={activeSection === 'contact' ? 'active' : ''}>Contact</button>
         </div>
@@ -310,6 +319,8 @@ Interactive, entertaining, memorable.
           <p className="footer-note">"Me today always better than me yesterday"</p>
         </div>
       </section>
+
+      {showDiary && <Diary />}
     </div>
   )
 }

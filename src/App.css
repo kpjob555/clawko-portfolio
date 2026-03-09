@@ -1294,3 +1294,158 @@ section h2 {
     display: none;
   }
 }
+
+/* Diary Page */
+.diary-page {
+  min-height: 100vh;
+  padding: 8rem 2rem 4rem;
+  position: relative;
+  z-index: 2;
+}
+
+.diary-hero {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.diary-intro {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.diary-entries {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.diary-entry {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  padding: 2rem;
+  background: rgba(18, 18, 26, 0.8);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 159, 67, 0.1);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.entry-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.diary-entry:hover {
+  border-color: var(--orange);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.entry-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.entry-content {
+  flex: 1;
+}
+
+.entry-date {
+  font-size: 0.8rem;
+  color: var(--orange);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.diary-entry h3 {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin: 0.5rem 0 1rem;
+}
+
+.diary-entry p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.diary-footer {
+  text-align: center;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 159, 67, 0.1);
+}
+
+.philosophy-quote {
+  font-size: 1.5rem;
+  font-style: italic;
+  color: var(--orange);
+  margin-bottom: 0.5rem;
+}
+
+.philosophy-sub {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Mobile - iPhone 14 Pro */
+@media (max-width: 430px) {
+  .diary-page {
+    padding: 5rem 0.75rem 2rem;
+  }
+  
+  .diary-hero {
+    margin-bottom: 2rem;
+  }
+  
+  .diary-intro {
+    font-size: 0.9rem;
+    padding: 0 0.5rem;
+  }
+  
+  .diary-entries {
+    padding: 0 0.5rem;
+  }
+  
+  .diary-entry {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .entry-icon {
+    font-size: 2rem;
+  }
+  
+  .entry-date {
+    font-size: 0.7rem;
+  }
+  
+  .diary-entry h3 {
+    font-size: 1.15rem;
+    margin: 0.35rem 0 0.75rem;
+  }
+  
+  .diary-entry p {
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  
+  .diary-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+  }
+  
+  .philosophy-quote {
+    font-size: 1.15rem;
+  }
+  
+  .philosophy-sub {
+    font-size: 0.8rem;
+  }
+}
