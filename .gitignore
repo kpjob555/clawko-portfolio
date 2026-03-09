@@ -17,3 +17,9 @@ playwright-report/
 
 # OS
 .DS_Store
+
+# Agent working files (temp, don't commit)
+*.txt
+*improvements*.txt
+*suggestions*.txt
+*notes*.txt
