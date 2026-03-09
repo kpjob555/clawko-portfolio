@@ -945,6 +945,8 @@ section h2 {
 @media (max-width: 768px) {
   .nav {
     padding: 1rem 1.5rem;
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
   
   .nav-links {
@@ -952,22 +954,32 @@ section h2 {
   }
   
   .nav-links button {
-    padding: 0.5rem 0.8rem;
+    padding: 0.5rem 0.9rem;
     font-size: 0.85rem;
+    min-height: 44px;
   }
   
   .hero-title {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 2.8rem);
   }
   
   .tagline {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     flex-direction: column;
+    gap: 0.25rem;
   }
   
   .hero-buttons {
     flex-direction: column;
     align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
   }
   
   .hero-stats {
@@ -978,6 +990,12 @@ section h2 {
   .contact-links {
     flex-direction: column;
     align-items: center;
+  }
+  
+  .contact-link {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
   }
   
   .timeline::before {
@@ -991,6 +1009,11 @@ section h2 {
   .timeline-item {
     padding-left: 50px;
   }
+  
+  .about-grid,
+  .skills-container {
+    gap: 1rem;
+  }
 }
 
 /* iPhone 14 Pro - 393px width */
@@ -1001,6 +1024,8 @@ section h2 {
     gap: 0;
     justify-content: space-between;
     max-height: 45px;
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
   }
   
   .nav-logo {
@@ -1025,15 +1050,16 @@ section h2 {
   }
   
   .nav-links button {
-    padding: 0.2rem 0.35rem;
-    font-size: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.65rem;
     white-space: nowrap;
+    min-height: 48px;
   }
   
   .hero {
     padding: 1rem 0.5rem;
     min-height: auto;
-    padding-top: 3.5rem;
+    padding-top: 4rem;
     padding-bottom: 2rem;
   }
   
@@ -1046,14 +1072,14 @@ section h2 {
   }
   
   .avatar {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
   }
   
   .avatar-emoji img,
   .avatar-emoji svg {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 2.8rem;
+    height: 2.8rem;
   }
   
   .avatar-ring {
@@ -1064,65 +1090,68 @@ section h2 {
   }
   
   .avatar-glow {
-    width: 100px;
-    height: 100px;
+    width: 130px;
+    height: 130px;
   }
   
   .hero-title {
-    font-size: 1.4rem;
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
     letter-spacing: -0.3px;
     margin-bottom: 0.4rem;
   }
   
   .tagline {
-    font-size: 0.8rem;
+    font-size: clamp(0.7rem, 3vw, 0.9rem);
     gap: 0.15rem;
     margin-bottom: 0.5rem;
   }
   
   .tagline-icon {
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
   }
   
   .hero-desc {
-    font-size: 0.75rem;
-    line-height: 1.4;
+    font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+    line-height: 1.5;
     padding: 0 0.25rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
   }
   
   .hero-buttons {
-    gap: 0.4rem;
+    flex-direction: column;
+    gap: 0.6rem;
     width: 100%;
-    padding: 0 0.5rem;
-    margin-bottom: 1rem;
+    padding: 0 1rem;
+    margin-bottom: 1.25rem;
   }
   
   .btn-primary,
   .btn-secondary {
-    padding: 0.6rem 1rem;
-    font-size: 0.8rem;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.85rem;
     width: 100%;
-    max-width: 200px;
+    max-width: 220px;
     justify-content: center;
     border-radius: 20px;
+    min-height: 48px;
   }
   
   .hero-stats {
-    gap: 0.5rem;
-    padding: 0.25rem 0;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    flex-wrap: wrap;
   }
   
   .stat {
-    min-width: 50px;
+    min-width: 60px;
   }
   
   .stat-value {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
   
   .stat-label {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
   }
   
   .scroll-indicator {
@@ -1130,7 +1159,7 @@ section h2 {
   }
   
   section {
-    padding: 3rem 0.75rem;
+    padding: 3rem 1rem;
   }
   
   .section-header {
@@ -1139,50 +1168,51 @@ section h2 {
   
   .section-tag {
     font-size: 0.7rem;
-    padding: 0.25rem 0.6rem;
+    padding: 0.3rem 0.7rem;
   }
   
   section h2 {
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 5vw, 1.6rem);
   }
   
   .about-grid {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 1rem;
   }
   
   .about-card {
-    padding: 1.25rem;
+    padding: 1.5rem;
   }
   
   .card-icon {
-    font-size: 1.75rem;
+    font-size: 2rem;
   }
   
   .about-card h3 {
-    font-size: 1rem;
+    font-size: 1.05rem;
   }
   
   .about-card p {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
   
   .skills-container {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 1rem;
   }
   
   .skill-category {
-    padding: 1rem;
+    padding: 1.25rem;
   }
   
   .skill-tags {
-    gap: 0.4rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
   }
   
   .skill-tag {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.7rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
   }
   
   .timeline::before {
@@ -1196,52 +1226,54 @@ section h2 {
   }
   
   .timeline-item {
-    padding-left: 32px;
-    padding-bottom: 1.5rem;
+    padding-left: 36px;
+    padding-bottom: 1.75rem;
   }
   
   .timeline-content {
-    padding: 1rem;
+    padding: 1.1rem;
   }
   
   .timeline-date {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
   
   .timeline-content h3 {
-    font-size: 0.9rem;
-    margin: 0.35rem 0;
+    font-size: 0.95rem;
+    margin: 0.4rem 0;
   }
   
   .timeline-content p {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
   
   .contact {
-    padding: 3rem 0.75rem;
+    padding: 3rem 1rem;
   }
   
   .contact-desc {
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
   }
   
   .contact-link {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.9rem;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
     width: 100%;
-    max-width: 240px;
+    max-width: 260px;
     justify-content: center;
+    min-height: 48px;
   }
   
   .footer {
-    padding-top: 1.25rem;
+    padding-top: 1.5rem;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
   
   .footer-cat img,
   .footer-cat svg {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
   }
   
   .footer p {
@@ -1546,7 +1578,8 @@ section h2 {
 /* Mobile - iPhone 14 Pro */
 @media (max-width: 430px) {
   .diary-page {
-    padding: 5rem 0.75rem 2rem;
+    padding: 5rem 1rem 2rem;
+    padding-top: max(5rem, calc(3rem + env(safe-area-inset-top)));
   }
   
   .diary-hero {
@@ -1565,39 +1598,39 @@ section h2 {
   .diary-entry {
     flex-direction: column;
     gap: 0.75rem;
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.75rem;
   }
   
   .entry-icon {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
   
   .entry-date {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
   
   .diary-entry h3 {
-    font-size: 1.15rem;
-    margin: 0.35rem 0 0.75rem;
+    font-size: 1.2rem;
+    margin: 0.4rem 0 0.85rem;
   }
   
   .diary-entry p {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     line-height: 1.6;
   }
   
   .diary-footer {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     padding-top: 1.5rem;
   }
   
   .philosophy-quote {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
   }
   
   .philosophy-sub {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -1777,5 +1810,44 @@ section h2 {
   .dot {
     width: 10px;
     height: 10px;
+  }
+}
+
+/* Focus states for keyboard navigation */
+button:focus-visible,
+.nav-links button:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.contact-link:focus-visible,
+.dot:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .hero-content {
+    transition: none;
+  }
+  
+  .about-card,
+  .skill-category,
+  .timeline-content,
+  .diary-card,
+  .diary-entry,
+  .contact-link {
+    transition: none;
+  }
+  
+  .cursor-follower {
+    display: none;
   }
 }
