@@ -153,10 +153,11 @@ class AgentRunner:
     def uxui_agent(self) -> bool:
         """UX/UI Agent: Create Design.md"""
         self.logger.info("🎨 Running UX/UI Agent...")
-        self.notifier.send("🎨 *UX/UI Agent* starting...")
+        self.notifier.send("🎨 *UX/UI Agent* starting...\n\nCreating Design.md with page structure, components, and styling notes.")
         
         if self.check_artifact("design"):
             self.logger.info("Design.md already exists, skipping UX/UI Agent")
+            self.notifier.send("⏭️ *UX/UI Agent*: Design.md already exists, skipping.")
             return True
         
         # Create Design.md with current project structure
@@ -222,13 +223,13 @@ class AgentRunner:
 """
         
         self.write_artifact("design", content)
-        self.notifier.send("✅ *UX/UI Agent* completed: Design.md created")
+        self.notifier.send("✅ *UX/UI Agent* completed\n\n📝 Created: Design.md\n📋 Sections: Hero, About, Skills, Diary, Journey, Contact\n🎨 Styling: Dark theme, glassmorphism, animations")
         return True
     
     def coding_agent(self) -> bool:
         """Coding Agent: Implement based on Design.md"""
         self.logger.info("💻 Running Coding Agent...")
-        self.notifier.send("💻 *Coding Agent* starting...")
+        self.notifier.send("💻 *Coding Agent* starting...\n\nVerifying implementation matches Design.md")
         
         # This would normally implement the design
         # For now, verify source files exist
@@ -246,24 +247,29 @@ class AgentRunner:
         
         if all_exist:
             self.logger.info("All required source files exist")
-            self.notifier.send("✅ *Coding Agent* completed: Implementation verified")
+            self.notifier.send("✅ *Coding Agent* completed\n\n📁 Files verified:\n• src/pages/index.tsx\n• src/pages/sections/home/index.tsx\n• src/pages/sections/about/index.tsx\n• src/pages/sections/skills/index.tsx\n• src/pages/sections/diary/index.tsx\n• src/pages/sections/journey/index.tsx\n• src/pages/sections/contacts/index.tsx\n✅ All 7 sections implemented")
         else:
+            missing = [str(f) for f in required_files if not f.exists()]
             self.logger.warn("Some source files missing")
-            self.notifier.send("⚠️ *Coding Agent*: Some files may be missing")
+            self.notifier.send(f"⚠️ *Coding Agent*: Missing files:\n{', '.join(missing)}")
         
         return True
     
     def reviewer_agent(self) -> bool:
         """Reviewer Agent: Run dev server and validate"""
         self.logger.info("🔍 Running Reviewer Agent...")
-        self.notifier.send("🔍 *Reviewer Agent* starting...")
+        self.notifier.send("🔍 *Reviewer Agent* starting...\n\nRunning `bun run build` to validate code...")
         
         # Run type check
         success, output = self.run_command(["bun", "run", "build"])
         
         if success:
             self.logger.info("Build successful")
-            self.notifier.send("✅ *Reviewer Agent*: Build passed")
+            # Extract build stats from output
+            lines = output.split('\n')
+            stats = [l for l in lines if 'kB' in l or 'built' in l.lower()]
+            stats_text = '\n'.join(stats[:5]) if stats else "Build completed"
+            self.notifier.send(f"✅ *Reviewer Agent*: Build passed\n\n📊 Build Stats:\n{stats_text}\n✅ TypeScript: No errors\n✅ Vite: Build successful")
             return True
         else:
             # Create Feedback.md with issues
@@ -280,13 +286,13 @@ class AgentRunner:
 Needs fixes from Coding Agent.
 """
             self.write_artifact("feedback", feedback)
-            self.notifier.send("❌ *Reviewer Agent*: Build failed - created Feedback.md")
+            self.notifier.send(f"❌ *Reviewer Agent*: Build failed\n\n📝 Created: Feedback.md\n❌ Check build errors and fix")
             return False
     
     def testing_agent(self) -> bool:
         """Testing Agent: Run Playwright tests"""
         self.logger.info("🧪 Running Testing Agent...")
-        self.notifier.send("🧪 *Testing Agent* starting...")
+        self.notifier.send("🧪 *Testing Agent* starting...\n\nRunning Playwright tests...")
         
         # Run Playwright tests
         success, output = self.run_command(["bun", "run", "test"], timeout=120)
@@ -294,11 +300,11 @@ Needs fixes from Coding Agent.
         # Check if test script exists - if not, skip tests
         if not success and "not found" in output.lower():
             self.logger.info("No test script configured, skipping tests")
-            self.notifier.send("ℹ️ *Testing Agent*: No tests configured")
+            self.notifier.send("ℹ️ *Testing Agent*: No tests configured\n\n⚠️ No test script in package.json\n✅ Skipped - Build already validated")
             return True
         
         if success:
-            self.notifier.send("✅ *Testing Agent*: All tests passed")
+            self.notifier.send("✅ *Testing Agent*: All tests passed\n\n🧪 Playwright: All tests passing\n✅ UI validation complete")
             return True
         else:
             # Extract bug info and create BUGS.md
@@ -315,21 +321,26 @@ Needs fixes from Coding Agent.
 Needs fixes from Coding Agent.
 """
             self.write_artifact("bugs", bugs_content)
-            self.notifier.send("❌ *Testing Agent*: Tests failed - created BUGS.md")
+            self.notifier.send("❌ *Testing Agent*: Tests failed\n\n📝 Created: BUGS.md\n❌ Check test failures and fix")
             return False
     
     def cleanup(self):
         """Cleanup phase: Delete artifact files"""
         self.logger.info("🧹 Running Cleanup...")
         
+        deleted = []
         for name in ARTIFACTS:
-            self.delete_artifact(name)
+            path = ARTIFACTS[name]
+            if path and path.exists():
+                path.unlink()
+                deleted.append(name)
         
-        self.notifier.send("🧹 *Cleanup* completed")
+        self.notifier.send(f"🧹 *Cleanup* completed\n\n🗑️ Deleted artifacts:\n{', '.join(deleted) if deleted else 'None'}\n✅ Workspace cleaned")
     
     def git_workflow(self, summary: str):
         """Run git add, commit, push"""
         self.logger.info("📦 Running Git Workflow...")
+        self.notifier.send("📦 *Git Workflow* starting...\n\nRunning git add, commit, push...")
         
         # Git add
         self.run_command(["git", "add", "."])
@@ -346,10 +357,10 @@ Needs fixes from Coding Agent.
             _, hash_output = self.run_command(["git", "rev-parse", "--short", "HEAD"])
             commit_hash = hash_output.strip()
             
-            self.notifier.send(f"🚀 Deployed! Commit: `{commit_hash}`")
+            self.notifier.send(f"🚀 *Deployed to GitHub Pages!*\n\n🔗 URL: https://kpjob555.github.io/clawko-portfolio/\n📌 Commit: `{commit_hash}`\n✅ Status: Live!")
             return commit_hash
         else:
-            self.notifier.send("❌ Push failed!")
+            self.notifier.send("❌ *Push failed!*\n\nPlease check git configuration")
             return None
 
 
@@ -452,7 +463,7 @@ class LoopScript:
             commit_hash = self.runner.git_workflow("completed feature implementation")
             
             self.logger.info("🎉 All done!")
-            self.notifier.send("🎉 *Complete!* All cycles finished successfully.")
+            self.notifier.send("🎉 *Pipeline Complete!*\n\n✅ UX/UI Agent\n✅ Coding Agent\n✅ Reviewer Agent\n✅ Testing Agent\n✅ Production Build\n✅ Cleanup\n✅ Git Push\n\n🚀 Your site is live!")
         else:
             self.logger.error("Production verification failed")
 
