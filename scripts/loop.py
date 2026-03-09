@@ -291,8 +291,9 @@ Needs fixes from Coding Agent.
         # Run Playwright tests
         success, output = self.run_command(["bun", "run", "test"], timeout=120)
         
-        if "no tests" in output.lower() or "test" not in output.lower():
-            self.logger.info("No Playwright tests configured yet")
+        # Check if test script exists - if not, skip tests
+        if not success and "not found" in output.lower():
+            self.logger.info("No test script configured, skipping tests")
             self.notifier.send("ℹ️ *Testing Agent*: No tests configured")
             return True
         
