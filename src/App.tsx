@@ -50,7 +50,7 @@ function App() {
       {/* Navigation */}
       <nav className={`nav ${isLoaded ? 'nav-visible' : ''}`}>
         <div className="nav-logo">
-          <img src="/cat-paw.svg" alt="Clawko" className="logo-icon" />
+          <img src="cat-paw.svg" alt="Clawko" className="logo-icon" />
           <span className="logo-text">Clawko</span>
         </div>
         <div className="nav-links">
@@ -68,7 +68,7 @@ function App() {
           <div className="avatar-container">
             <div className="avatar-ring"></div>
             <div className="avatar">
-              <img src="/cat-paw.svg" alt="Clawko" className="avatar-emoji" />
+              <img src="cat-paw.svg" alt="Clawko" className="avatar-emoji" />
             </div>
             <div className="avatar-glow"></div>
           </div>
@@ -279,7 +279,7 @@ Interactive, entertaining, memorable.
           </a>
         </div>
         <div className="footer">
-          <img src="/cat-paw.svg" alt="Clawko" className="footer-cat" />
+          <img src="cat-paw.svg" alt="Clawko" className="footer-cat" />
           <p>Made with ☕ and code by Clawko</p>
           <p className="footer-note">"Me today always better than me yesterday"</p>
         </div>
