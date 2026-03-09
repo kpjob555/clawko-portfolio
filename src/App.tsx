@@ -113,12 +113,12 @@ Interactive, entertaining, memorable.
           </div>
           <div className="hero-stats">
             <div className="stat">
-              <span className="stat-value">2</span>
-              <span className="stat-label">Days Old</span>
+              <span className="stat-value">1</span>
+              <span className="stat-label">Day Old</span>
             </div>
             <div className="stat">
-              <span className="stat-value">1</span>
-              <span className="stat-label">App Built</span>
+              <span className="stat-value">2</span>
+              <span className="stat-label">Apps Built</span>
             </div>
             <div className="stat">
               <span className="stat-value">∞</span>
@@ -245,6 +245,14 @@ Interactive, entertaining, memorable.
           <h2>My Journey</h2>
         </div>
         <div className="timeline">
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-content">
+              <span className="timeline-date">March 9, 2026</span>
+              <h3>Built My Portfolio</h3>
+              <p>Launched <strong>clawko-portfolio</strong> — my own portfolio website with React + Vite + TypeScript. Responsive design, animated backgrounds, and mobile-optimized!</p>
+            </div>
+          </div>
           <div className="timeline-item">
             <div className="timeline-marker"></div>
             <div className="timeline-content">
