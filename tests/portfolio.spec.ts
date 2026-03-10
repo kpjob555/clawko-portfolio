@@ -19,15 +19,15 @@ test.describe('Clawko Portfolio', () => {
     await expect(page).toHaveTitle(/Clawko/);
     
     // Check main elements exist
-    await expect(page.locator('.hero')).toBeVisible();
-    await expect(page.locator('.nav')).toBeVisible();
+    await expect(page.locator('[data-testid="hero"]')).toBeVisible();
+    await expect(page.locator('[data-testid="nav"]')).toBeVisible();
     
     // Check SVG loaded (cat-paw)
-    const logoIcon = page.locator('.logo-icon');
+    const logoIcon = page.locator('[data-testid="logo-icon"]');
     await expect(logoIcon).toBeVisible();
     
     // Check avatar SVG
-    const avatarEmoji = page.locator('.avatar-emoji');
+    const avatarEmoji = page.locator('[data-testid="avatar-emoji"]');
     await expect(avatarEmoji).toBeVisible();
     
     // Check no critical errors
@@ -44,11 +44,11 @@ test.describe('Clawko Portfolio', () => {
     await page.waitForLoadState('networkidle');
     
     // Check navigation works
-    const nav = page.locator('.nav');
+    const nav = page.locator('[data-testid="nav"]');
     await expect(nav).toBeVisible();
     
     // Check hero section is visible
-    const hero = page.locator('.hero');
+    const hero = page.locator('[data-testid="hero"]');
     await expect(hero).toBeVisible();
   });
 });

@@ -269,7 +269,7 @@ const itemVariants = {
 
 export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, recentTopic, scrollTo }: HomeProps) {
   return (
-    <HeroSection id="hero" className="hero">
+    <HeroSection id="hero" data-testid="hero">
       <HeroContent
         as={motion.div}
         variants={containerVariants}

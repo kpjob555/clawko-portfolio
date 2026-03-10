@@ -144,7 +144,7 @@ export default function Navigation({ activeSection, isVisible, scrollTo }: NavPr
 
   return (
     <>
-      <NavContainer
+      <NavContainer data-testid="nav"
         className="nav"
         $isVisible={isVisible}
         initial={{ y: -100, opacity: 0 }}
