@@ -34,6 +34,11 @@ const AuroraContainer = styled.div`
   background-size: 400% 400%;
   animation: ${gradientMove} 15s ease infinite;
   filter: blur(60px);
+  
+  @media (max-width: 768px) {
+    filter: blur(40px);
+    animation-duration: 20s;
+  }
 `;
 
 const GlowOrb = styled(motion.div)<{ $size: string; $color: string; $top: string; $left: string }>`
@@ -44,6 +49,11 @@ const GlowOrb = styled(motion.div)<{ $size: string; $color: string; $top: string
   background: ${({ $color }) => $color};
   filter: blur(80px);
   opacity: 0.5;
+
+  @media (max-width: 768px) {
+    filter: blur(50px);
+    opacity: 0.3;
+  }
 `;
 
 const GridOverlay = styled.div`
@@ -56,16 +66,10 @@ const GridOverlay = styled.div`
     linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 50px 50px;
-`;
 
-const Particle = styled(motion.div)<{ $left: string; $delay: string; $duration: string }>`
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: rgba(255, 159, 67, 0.6);
-  border-radius: 50%;
-  left: ${({ $left }) => $left};
-  bottom: -10px;
+  @media (max-width: 768px) {
+    background-size: 30px 30px;
+  }
 `;
 
 const StarsContainer = styled.div`
@@ -75,6 +79,10 @@ const StarsContainer = styled.div`
   right: 0;
   bottom: 0;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Star = styled(motion.div)<{ $top: string; $left: string; $size: number }>`
@@ -93,15 +101,14 @@ interface AnimatedBackgroundProps {
 }
 
 export default function AnimatedBackground({}: AnimatedBackgroundProps) {
+  const prefersReducedMotion = typeof window !== 'undefined' 
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const particles = Array.from({ length: 15 }, (_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    delay: `${Math.random() * 5}s`,
-    duration: `${3 + Math.random() * 4}s`,
-  }));
-
-  const stars = Array.from({ length: 20 }, (_, i) => ({
+  // Reduced elements on mobile for performance
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const starCount = isMobile ? 0 : 20;
+  
+  const stars = Array.from({ length: starCount }, (_, i) => ({
     id: i,
     top: `${Math.random() * 100}%`,
     left: `${Math.random() * 100}%`,
@@ -114,26 +121,36 @@ export default function AnimatedBackground({}: AnimatedBackgroundProps) {
     { size: '300px', color: 'linear-gradient(135deg, #00d9ff 0%, #2dd4bf 100%)', top: '70%', left: '50%', delay: -10 },
   ];
 
+  // Simplified animation for reduced motion preference
+  if (prefersReducedMotion) {
+    return (
+      <BackgroundContainer>
+        <AuroraContainer />
+        <GridOverlay />
+      </BackgroundContainer>
+    );
+  }
+
   return (
     <BackgroundContainer>
       {/* Aurora gradient background */}
       <AuroraContainer />
       
-      {/* Floating orbs */}
+      {/* Floating orbs - reduced on mobile */}
       {orbs.map((orb, i) => (
         <GlowOrb
           key={i}
-          $size={orb.size}
+          $size={isMobile ? orb.size.replace(/\d+/, (m) => String(Number(m) * 0.6)) : orb.size}
           $color={orb.color}
           $top={orb.top}
           $left={orb.left}
           animate={{
-            y: [0, -30, 0, 30, 0],
-            x: [0, 20, 0, -20, 0],
-            scale: [1, 1.05, 1, 0.95, 1],
+            y: [0, -20, 0, 20, 0],
+            x: [0, 15, 0, -15, 0],
+            scale: [1, 1.03, 1, 0.97, 1],
           }}
           transition={{
-            duration: 20,
+            duration: isMobile ? 30 : 20,
             repeat: Infinity,
             ease: "easeInOut",
             delay: orb.delay,
@@ -144,28 +161,7 @@ export default function AnimatedBackground({}: AnimatedBackgroundProps) {
       {/* Grid overlay */}
       <GridOverlay />
       
-      {/* Floating particles */}
-      {particles.slice(0, 8).map((p) => (
-        <Particle
-          key={p.id}
-          $left={p.left}
-          $delay={p.delay}
-          $duration={p.duration}
-          animate={{
-            y: [-10, -window.innerHeight - 10],
-            opacity: [0, 0.8, 0.8, 0],
-            x: [0, Math.random() * 50 - 25],
-          }}
-          transition={{
-            duration: 8 + Math.random() * 4,
-            repeat: Infinity,
-            ease: "linear",
-            delay: parseFloat(p.delay),
-          }}
-        />
-      ))}
-      
-      {/* Stars */}
+      {/* Stars - hidden on mobile */}
       <StarsContainer>
         {stars.map((star) => (
           <Star

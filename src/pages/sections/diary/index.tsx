@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useCallback } from 'react';
+import { motion, AnimatePresence, useMotionValue } from 'framer-motion';
 import styled from 'styled-components';
 import diaryEntries from './config';
 
@@ -38,10 +38,18 @@ const SectionTitle = styled(motion.h2)`
   }
 `;
 
-const CarouselContainer = styled(motion.div)`
+const CarouselContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
   position: relative;
+  overflow: hidden;
+  padding: 1rem;
+`;
+
+const CarouselTrack = styled(motion.div)<{ $isDragging: boolean }>`
+  cursor: ${({ $isDragging }) => $isDragging ? 'grabbing' : 'grab'};
+  user-select: none;
+  touch-action: pan-y;
 `;
 
 const DiaryCard = styled(motion.div)`
@@ -52,7 +60,6 @@ const DiaryCard = styled(motion.div)`
   padding: 3rem;
   position: relative;
   overflow: hidden;
-  transition: all 0.4s ease;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 159, 67, 0.1);
 
   &::before {
@@ -63,6 +70,10 @@ const DiaryCard = styled(motion.div)`
     right: 0;
     height: 4px;
     background: linear-gradient(90deg, #ff9f43, #ff6b9d, #a55eea);
+  }
+
+  @media (max-width: 768px) {
+    padding: 2rem;
   }
 `;
 
@@ -82,12 +93,20 @@ const CardTitle = styled.h3`
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const CardContent = styled.p`
   font-size: 1.1rem;
   color: #a1a1b0;
   line-height: 1.8;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 const CardIcon = styled.span`
@@ -119,9 +138,15 @@ const Dot = styled.button<{ $isActive: boolean }>`
   background: ${({ $isActive }) => $isActive ? 'linear-gradient(90deg, #ff9f43, #ff6b9d)' : 'rgba(255, 159, 67, 0.3)'};
   cursor: pointer;
   transition: all 0.3s ease;
+  padding: 0;
 
   &:hover {
     background: rgba(255, 159, 67, 0.6);
+  }
+
+  @media (max-width: 768px) {
+    min-width: 44px;
+    min-height: 44px;
   }
 `;
 
@@ -141,6 +166,7 @@ const NavButton = styled(motion.button)`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
 
   &:hover {
     background: rgba(255, 159, 67, 0.2);
@@ -152,31 +178,76 @@ const NavButton = styled(motion.button)`
   }
 `;
 
+const SwipeHint = styled(motion.p)`
+  text-align: center;
+  color: #a1a1b0;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  opacity: 0.7;
+`;
+
 const cardVariants = {
   enter: (direction: number) => ({
     x: direction > 0 ? 300 : -300,
     opacity: 0,
+    scale: 0.8,
   }),
   center: {
     x: 0,
     opacity: 1,
+    scale: 1,
+    transition: {
+      x: { type: "spring" as const, stiffness: 300, damping: 30 },
+      opacity: { duration: 0.3 },
+      scale: { duration: 0.3 },
+    },
   },
   exit: (direction: number) => ({
     x: direction < 0 ? 300 : -300,
     opacity: 0,
+    scale: 0.8,
+    transition: {
+      x: { type: "spring" as const, stiffness: 300, damping: 30 },
+      opacity: { duration: 0.3 },
+      scale: { duration: 0.3 },
+    },
   }),
 };
 
 export default function Diary() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const nextSlide = () => {
+  const x = useMotionValue(0);
+
+  const handleDragEnd = useCallback((_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
+    const swipeThreshold = 50;
+    const velocityThreshold = 500;
+
+    if (Math.abs(info.offset.x) > swipeThreshold || Math.abs(info.velocity.x) > velocityThreshold) {
+      const newIndex = activeIndex + (info.offset.x > 0 || info.velocity.x > 0 ? -1 : 1);
+      if (newIndex >= 0 && newIndex < diaryEntries.length) {
+        setDirection(info.offset.x > 0 || info.velocity.x > 0 ? -1 : 1);
+        setActiveIndex(newIndex);
+      }
+    }
+  }, [activeIndex]);
+
+  const nextSlide = useCallback(() => {
+    setDirection(1);
     setActiveIndex((prev) => (prev + 1) % diaryEntries.length);
-  };
+  }, []);
 
-  const prevSlide = () => {
+  const prevSlide = useCallback(() => {
+    setDirection(-1);
     setActiveIndex((prev) => (prev - 1 + diaryEntries.length) % diaryEntries.length);
-  };
+  }, []);
+
+  const goToSlide = useCallback((index: number) => {
+    setDirection(index > activeIndex ? 1 : -1);
+    setActiveIndex(index);
+  }, [activeIndex]);
 
   return (
     <DiarySection id="diary">
@@ -209,25 +280,35 @@ export default function Diary() {
           ←
         </NavButton>
 
-        <DiaryCard
-          key={activeIndex}
-          variants={cardVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            x: { type: "spring" as const, stiffness: 300, damping: 30 },
-            opacity: { duration: 0.3 },
-          }}
-        >
-          <CardGlow />
-          <CardDate>{diaryEntries[activeIndex].date}</CardDate>
-          <CardTitle>
-            <CardIcon>{diaryEntries[activeIndex].icon}</CardIcon>
-            {diaryEntries[activeIndex].title}
-          </CardTitle>
-          <CardContent>{diaryEntries[activeIndex].content}</CardContent>
-        </DiaryCard>
+        <AnimatePresence initial={false} mode="wait" custom={direction}>
+          <CarouselTrack
+            key={activeIndex}
+            $isDragging={isDragging}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={handleDragEnd}
+            onPointerUp={() => setIsDragging(false)}
+            onPointerLeave={() => setIsDragging(false)}
+            custom={direction}
+            variants={cardVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            style={{ x }}
+          >
+            <DiaryCard>
+              <CardGlow />
+              <CardDate>{diaryEntries[activeIndex].date}</CardDate>
+              <CardTitle>
+                <CardIcon>{diaryEntries[activeIndex].icon}</CardIcon>
+                {diaryEntries[activeIndex].title}
+              </CardTitle>
+              <CardContent>{diaryEntries[activeIndex].content}</CardContent>
+            </DiaryCard>
+          </CarouselTrack>
+        </AnimatePresence>
 
         <NavButton
           onClick={nextSlide}
@@ -238,12 +319,21 @@ export default function Diary() {
           →
         </NavButton>
 
+        <SwipeHint
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.7 }}
+          transition={{ delay: 1 }}
+        >
+          ← Swipe to navigate →
+        </SwipeHint>
+
         <NavigationDots>
           {diaryEntries.map((_, i) => (
             <Dot
               key={i}
               $isActive={i === activeIndex}
-              onClick={() => setActiveIndex(i)}
+              onClick={() => goToSlide(i)}
+              aria-label={`Go to slide ${i + 1}`}
             />
           ))}
         </NavigationDots>

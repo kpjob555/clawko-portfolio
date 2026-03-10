@@ -12,14 +12,14 @@ const NavContainer = styled(motion.nav)<{ $isVisible: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(10, 10, 15, 0.8);
+  background: rgba(10, 10, 15, 0.85);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 159, 67, 0.1);
   transform: translateY(${({ $isVisible }) => $isVisible ? '0' : '-100%'});
   transition: transform 0.3s ease;
 
-  &.nav {
-    /* Ensure nav class exists for tests */
+  @media (max-width: 768px) {
+    padding: 0.75rem 1rem;
   }
 `;
 
@@ -29,9 +29,7 @@ const LogoContainer = styled.div`
   gap: 0.75rem;
 `;
 
-const LogoIcon = styled.img.attrs({
-  className: 'logo-icon',
-})`
+const LogoIcon = styled.img`
   width: 36px;
   height: 36px;
   animation: bounce 2s ease-in-out infinite;
@@ -49,6 +47,10 @@ const LogoText = styled.span`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
 `;
 
 const NavLinks = styled.div`
@@ -70,6 +72,13 @@ const NavButton = styled(motion.button)<{ $isActive?: boolean }>`
   border-radius: 8px;
   transition: all 0.2s ease;
   position: relative;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 
   &::after {
     content: '';
@@ -91,6 +100,10 @@ const NavButton = styled(motion.button)<{ $isActive?: boolean }>`
   &:hover::after {
     width: 60%;
   }
+
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 
 const MobileMenuButton = styled(motion.button)`
@@ -100,9 +113,21 @@ const MobileMenuButton = styled(motion.button)`
   color: #ffffff;
   font-size: 1.5rem;
   padding: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  border-radius: 8px;
 
   @media (max-width: 768px) {
-    display: block;
+    display: flex;
+  }
+
+  &:active {
+    background: rgba(255, 159, 67, 0.1);
   }
 `;
 
@@ -111,13 +136,14 @@ const MobileMenu = styled(motion.div)`
   top: 70px;
   left: 0;
   right: 0;
-  background: rgba(10, 10, 15, 0.98);
+  background: rgba(10, , 0.10, 1598);
   backdrop-filter: blur(20px);
   padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   border-bottom: 1px solid rgba(255, 159, 67, 0.1);
+  z-index: 999;
 
   @media (min-width: 769px) {
     display: none;
@@ -142,10 +168,15 @@ const navItems = [
 export default function Navigation({ activeSection, isVisible, scrollTo }: NavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleNavClick = (sectionId: string) => {
+    scrollTo(sectionId);
+    setMobileMenuOpen(false);
+  };
+
   return (
     <>
-      <NavContainer data-testid="nav"
-        className="nav"
+      <NavContainer
+        data-testid="nav"
         $isVisible={isVisible}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -161,7 +192,7 @@ export default function Navigation({ activeSection, isVisible, scrollTo }: NavPr
             <NavButton
               key={item.id}
               $isActive={activeSection === item.id}
-              onClick={() => scrollTo(item.id)}
+              onClick={() => handleNavClick(item.id)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -173,6 +204,7 @@ export default function Navigation({ activeSection, isVisible, scrollTo }: NavPr
         <MobileMenuButton
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           whileTap={{ scale: 0.9 }}
+          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
         >
           {mobileMenuOpen ? '✕' : '☰'}
         </MobileMenuButton>
@@ -190,11 +222,8 @@ export default function Navigation({ activeSection, isVisible, scrollTo }: NavPr
               <NavButton
                 key={item.id}
                 $isActive={activeSection === item.id}
-                onClick={() => {
-                  scrollTo(item.id);
-                  setMobileMenuOpen(false);
-                }}
-                style={{ width: '100%', textAlign: 'left' }}
+                onClick={() => handleNavClick(item.id)}
+                style={{ width: '100%', textAlign: 'left', justifyContent: 'flex-start' }}
               >
                 {item.label}
               </NavButton>
