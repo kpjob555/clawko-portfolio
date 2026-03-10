@@ -11,8 +11,8 @@ import Contacts from './sections/contacts'
 export default function Pages() {
   // Dynamic stats - can be updated via cron
   const daysOld = Math.floor((Date.now() - new Date('2026-03-07T10:19:00Z').getTime()) / (1000 * 60 * 60 * 24)) + 1
-  const todaysVibe = "☕ Casual Mode"
-  const recentTopic = "🗣️ Nonviolent Communication (NVC)"
+  const todaysVibe = "🧥 Hoodie Mode"
+  const recentTopic = "🕉️ Four Noble Truths / Dukkha"
   const projectCount = 2
 
   const [activeSection, setActiveSection] = useState('hero')
