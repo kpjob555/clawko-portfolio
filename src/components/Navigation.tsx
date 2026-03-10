@@ -17,6 +17,10 @@ const NavContainer = styled(motion.nav)<{ $isVisible: boolean }>`
   border-bottom: 1px solid rgba(255, 159, 67, 0.1);
   transform: translateY(${({ $isVisible }) => $isVisible ? '0' : '-100%'});
   transition: transform 0.3s ease;
+
+  &.nav {
+    /* Ensure nav class exists for tests */
+  }
 `;
 
 const LogoContainer = styled.div`
@@ -139,6 +143,7 @@ export default function Navigation({ activeSection, isVisible, scrollTo }: NavPr
   return (
     <>
       <NavContainer
+        className="nav"
         $isVisible={isVisible}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

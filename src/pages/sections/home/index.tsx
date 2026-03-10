@@ -10,6 +10,10 @@ const HeroSection = styled.section`
   padding: 6rem 2rem 2rem;
   position: relative;
   z-index: 1;
+
+  &.hero {
+    /* Ensure hero class exists for tests */
+  }
 `;
 
 const HeroContent = styled(motion.div)`
@@ -263,7 +267,7 @@ const itemVariants = {
 
 export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, recentTopic, scrollTo }: HomeProps) {
   return (
-    <HeroSection id="hero">
+    <HeroSection id="hero" className="hero">
       <HeroContent
         as={motion.div}
         variants={containerVariants}
