@@ -152,7 +152,7 @@ export default function Navigation({ activeSection, isVisible, scrollTo }: NavPr
         transition={{ duration: 0.5, delay: 0.3 }}
       >
         <LogoContainer>
-          <LogoIcon src="cat-paw.svg" alt="Clawko" />
+          <LogoIcon src="cat-paw.svg" alt="Clawko" data-testid="logo-icon" />
           <LogoText>Clawko</LogoText>
         </LogoContainer>
         
