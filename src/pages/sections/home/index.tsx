@@ -64,6 +64,10 @@ const AvatarEmoji = styled.img`
   width: 100px;
   height: 100px;
   object-fit: contain;
+
+  &.avatar-emoji {
+    /* Ensure avatar-emoji class exists for tests */
+  }
 `;
 
 const AvatarGlow = styled(motion.div)`
@@ -277,7 +281,7 @@ export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, rece
         <AvatarContainer variants={itemVariants}>
           <AvatarRing />
           <AvatarInner>
-            <AvatarEmoji src="cat-paw.svg" alt="Clawko" />
+            <AvatarEmoji src="cat-paw.svg" alt="Clawko" className="avatar-emoji" />
           </AvatarInner>
           <AvatarGlow
             animate={{
