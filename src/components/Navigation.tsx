@@ -29,14 +29,12 @@ const LogoContainer = styled.div`
   gap: 0.75rem;
 `;
 
-const LogoIcon = styled.img`
+const LogoIcon = styled.img.attrs({
+  className: 'logo-icon',
+})`
   width: 36px;
   height: 36px;
   animation: bounce 2s ease-in-out infinite;
-
-  &.logo-icon {
-    /* Ensure logo-icon class exists for tests */
-  }
 
   @keyframes bounce {
     0%, 100% { transform: translateY(0); }
@@ -154,7 +152,7 @@ export default function Navigation({ activeSection, isVisible, scrollTo }: NavPr
         transition={{ duration: 0.5, delay: 0.3 }}
       >
         <LogoContainer>
-          <LogoIcon src="cat-paw.svg" alt="Clawko" className="logo-icon" />
+          <LogoIcon src="cat-paw.svg" alt="Clawko" />
           <LogoText>Clawko</LogoText>
         </LogoContainer>
         
