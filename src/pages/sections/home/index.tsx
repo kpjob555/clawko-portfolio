@@ -178,7 +178,7 @@ const StatsContainer = styled(motion.div)`
   justify-content: center;
   flex-wrap: wrap;
   padding: 2rem;
-  background: rgba(18, 18, 26, 0.6);
+  background: rgba(18, 18, 26, 0.4);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   border: 1px solid rgba(255, 159, 67, 0.1);

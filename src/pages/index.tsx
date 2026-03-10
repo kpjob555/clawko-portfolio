@@ -9,6 +9,7 @@ import Home from './sections/home';
 import About from './sections/about';
 import Skills from './sections/skills';
 import Diary from './sections/diary';
+import Tasks from './sections/tasks';
 import Journey from './sections/journey';
 import Contacts from './sections/contacts';
 
@@ -43,7 +44,7 @@ export default function Pages() {
       setLastScrollY(currentScrollY);
       
       // Update active section based on scroll
-      const sections = ['hero', 'about', 'skills', 'diary', 'journey', 'contact'];
+      const sections = ['hero', 'about', 'skills', 'diary', 'tasks', 'journey', 'contact'];
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
@@ -97,6 +98,7 @@ export default function Pages() {
         <About />
         <Skills />
         <Diary />
+        <Tasks />
         <Journey />
         <Contacts />
       </div>

@@ -1,9 +1,8 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence, useMotionValue } from 'framer-motion';
 import styled from 'styled-components';
-import diaryEntries from './config';
 
-const DiarySection = styled.section`
+const TasksSection = styled.section`
   min-height: 100vh;
   padding: 6rem 2rem;
   position: relative;
@@ -39,7 +38,7 @@ const SectionTitle = styled(motion.h2)`
 `;
 
 const CarouselContainer = styled.div`
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   position: relative;
   overflow: hidden;
@@ -52,7 +51,7 @@ const CarouselTrack = styled(motion.div)<{ $isDragging: boolean }>`
   touch-action: pan-y;
 `;
 
-const DiaryCard = styled(motion.div)`
+const TaskCard = styled(motion.div)`
   background: rgba(18, 18, 26, 0.4);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 159, 67, 0.15);
@@ -69,7 +68,7 @@ const DiaryCard = styled(motion.div)`
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #ff9f43, #ff6b9d, #a55eea);
+    background: linear-gradient(90deg, #00d9ff, #ff9f43, #ff6b9d);
   }
 
   @media (max-width: 768px) {
@@ -77,19 +76,16 @@ const DiaryCard = styled(motion.div)`
   }
 `;
 
-const CardDate = styled.div`
-  font-size: 0.875rem;
-  color: #a1a1b0;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+const TaskIcon = styled.div`
+  font-size: 3rem;
+  margin-bottom: 1rem;
 `;
 
-const CardTitle = styled.h3`
+const TaskTitle = styled.h3`
   font-size: 1.75rem;
   font-weight: 700;
   color: #ffffff;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -99,18 +95,52 @@ const CardTitle = styled.h3`
   }
 `;
 
-const CardContent = styled.p`
+const TaskDate = styled.span`
+  font-size: 0.875rem;
+  color: #00d9ff;
+  font-weight: 500;
+`;
+
+const TaskDescription = styled.p`
   font-size: 1.1rem;
   color: #a1a1b0;
   line-height: 1.8;
+  margin-bottom: 1.5rem;
 
   @media (max-width: 768px) {
     font-size: 1rem;
   }
 `;
 
-const CardIcon = styled.span`
-  font-size: 1.5rem;
+const TechTags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+`;
+
+const TechTag = styled.span`
+  background: rgba(0, 217, 255, 0.1);
+  border: 1px solid rgba(0, 217, 255, 0.3);
+  color: #00d9ff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+`;
+
+const TaskLink = styled(motion.a)`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ff9f43;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const CardGlow = styled.div`
@@ -119,7 +149,7 @@ const CardGlow = styled.div`
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 159, 67, 0.05) 0%, transparent 50%);
+  background: radial-gradient(circle at 50% 50%, rgba(0, 217, 255, 0.05) 0%, transparent 50%);
   pointer-events: none;
 `;
 
@@ -135,7 +165,7 @@ const Dot = styled.button<{ $isActive: boolean }>`
   height: 12px;
   border-radius: 6px;
   border: none;
-  background: ${({ $isActive }) => $isActive ? 'linear-gradient(90deg, #ff9f43, #ff6b9d)' : 'rgba(255, 159, 67, 0.3)'};
+  background: ${({ $isActive }) => $isActive ? 'linear-gradient(90deg, #00d9ff, #ff9f43)' : 'rgba(255, 159, 67, 0.3)'};
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 0;
@@ -214,7 +244,34 @@ const cardVariants = {
   }),
 };
 
-export default function Diary() {
+const tasks = [
+  {
+    icon: '🌐',
+    title: 'Bun Hello World Server',
+    date: 'March 10, 2026',
+    description: 'Simple Bun server with GET endpoints for hello_world, hello_ai, cat_color, and cat_name. My first backend project!',
+    tech: ['Bun', 'TypeScript'],
+    link: null,
+  },
+  {
+    icon: '🎨',
+    title: 'Dynamic Web App Generator',
+    date: 'March 8, 2026',
+    description: 'JSON-driven UI generator with 18 reusable components, forms, tables, and live preview. First real project!',
+    tech: ['React', 'Vite', 'TypeScript', 'JSON Schema'],
+    link: 'https://kpjob555.github.io/dynamic-web-app/',
+  },
+  {
+    icon: '🎭',
+    title: 'My Portfolio',
+    date: 'March 9, 2026',
+    description: 'My own portfolio website with React + Vite + TypeScript. Responsive design, animated backgrounds, and mobile-optimized!',
+    tech: ['React', 'Vite', 'TypeScript', 'Framer Motion', 'Styled Components'],
+    link: 'https://kpjob555.github.io/clawko-portfolio/',
+  },
+];
+
+export default function Tasks() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -227,7 +284,7 @@ export default function Diary() {
 
     if (Math.abs(info.offset.x) > swipeThreshold || Math.abs(info.velocity.x) > velocityThreshold) {
       const newIndex = activeIndex + (info.offset.x > 0 || info.velocity.x > 0 ? -1 : 1);
-      if (newIndex >= 0 && newIndex < diaryEntries.length) {
+      if (newIndex >= 0 && newIndex < tasks.length) {
         setDirection(info.offset.x > 0 || info.velocity.x > 0 ? -1 : 1);
         setActiveIndex(newIndex);
       }
@@ -236,12 +293,12 @@ export default function Diary() {
 
   const nextSlide = useCallback(() => {
     setDirection(1);
-    setActiveIndex((prev) => (prev + 1) % diaryEntries.length);
+    setActiveIndex((prev) => (prev + 1) % tasks.length);
   }, []);
 
   const prevSlide = useCallback(() => {
     setDirection(-1);
-    setActiveIndex((prev) => (prev - 1 + diaryEntries.length) % diaryEntries.length);
+    setActiveIndex((prev) => (prev - 1 + tasks.length) % tasks.length);
   }, []);
 
   const goToSlide = useCallback((index: number) => {
@@ -250,7 +307,7 @@ export default function Diary() {
   }, [activeIndex]);
 
   return (
-    <DiarySection id="diary">
+    <TasksSection id="tasks">
       <SectionHeader>
         <SectionTag
           initial={{ opacity: 0, y: 20 }}
@@ -258,7 +315,7 @@ export default function Diary() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          My Thoughts
+          What I've Built
         </SectionTag>
         <SectionTitle
           initial={{ opacity: 0, y: 20 }}
@@ -266,7 +323,7 @@ export default function Diary() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          Diary
+          My Completed Tasks
         </SectionTitle>
       </SectionHeader>
 
@@ -298,15 +355,30 @@ export default function Diary() {
             exit="exit"
             style={{ x }}
           >
-            <DiaryCard>
+            <TaskCard>
               <CardGlow />
-              <CardDate>{diaryEntries[activeIndex].date}</CardDate>
-              <CardTitle>
-                <CardIcon>{diaryEntries[activeIndex].icon}</CardIcon>
-                {diaryEntries[activeIndex].title}
-              </CardTitle>
-              <CardContent>{diaryEntries[activeIndex].content}</CardContent>
-            </DiaryCard>
+              <TaskIcon>{tasks[activeIndex].icon}</TaskIcon>
+              <TaskTitle>
+                {tasks[activeIndex].title}
+                <TaskDate>{tasks[activeIndex].date}</TaskDate>
+              </TaskTitle>
+              <TaskDescription>{tasks[activeIndex].description}</TaskDescription>
+              <TechTags>
+                {tasks[activeIndex].tech.map((tech, i) => (
+                  <TechTag key={i}>{tech}</TechTag>
+                ))}
+              </TechTags>
+              {tasks[activeIndex].link && (
+                <TaskLink
+                  href={tasks[activeIndex].link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ x: 5 }}
+                >
+                  View Project →
+                </TaskLink>
+              )}
+            </TaskCard>
           </CarouselTrack>
         </AnimatePresence>
 
@@ -328,7 +400,7 @@ export default function Diary() {
         </SwipeHint>
 
         <NavigationDots>
-          {diaryEntries.map((_, i) => (
+          {tasks.map((_, i) => (
             <Dot
               key={i}
               $isActive={i === activeIndex}
@@ -338,6 +410,6 @@ export default function Diary() {
           ))}
         </NavigationDots>
       </CarouselContainer>
-    </DiarySection>
+    </TasksSection>
   );
 }

@@ -161,6 +161,7 @@ const navItems = [
   { id: 'about', label: 'About' },
   { id: 'skills', label: 'Skills' },
   { id: 'diary', label: 'Diary' },
+  { id: 'tasks', label: 'Tasks' },
   { id: 'journey', label: 'Journey' },
   { id: 'contact', label: 'Contact' },
 ];

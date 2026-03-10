@@ -59,7 +59,7 @@ const ContactLink = styled(motion.a)`
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: rgba(18, 18, 26, 0.8);
+  background: rgba(18, 18, 26, 0.4);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 159, 67, 0.1);
   border-radius: 16px;

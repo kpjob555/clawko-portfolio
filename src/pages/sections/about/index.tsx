@@ -45,7 +45,7 @@ const AboutGrid = styled.div`
 `;
 
 const AboutCard = styled(motion.div)`
-  background: rgba(18, 18, 26, 0.8);
+  background: rgba(18, 18, 26, 0.4);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 159, 67, 0.1);
   border-radius: 20px;
