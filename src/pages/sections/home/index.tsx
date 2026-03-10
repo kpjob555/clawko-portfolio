@@ -62,6 +62,7 @@ const AvatarInner = styled.div`
 
 const AvatarEmoji = styled.img.attrs({
   className: 'avatar-emoji',
+  'data-testid': 'avatar-emoji',
 })`
   width: 100px;
   height: 100px;

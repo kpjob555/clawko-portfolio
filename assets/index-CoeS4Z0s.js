@@ -286,7 +286,7 @@ Error generating stack: `+l.message+`
   justify-content: center;
   overflow: hidden;
   box-shadow: 0 0 60px rgba(255, 159, 67, 0.3);
-`,O2=Q.img.attrs({className:"avatar-emoji"})`
+`,O2=Q.img.attrs({className:"avatar-emoji","data-testid":"avatar-emoji"})`
   width: 100px;
   height: 100px;
   object-fit: contain;
