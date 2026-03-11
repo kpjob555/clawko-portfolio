@@ -5,16 +5,6 @@ const spin = keyframes`
   to { transform: rotate(360deg); }
 `;
 
-const fadeIn = keyframes`
-  from { opacity: 0; }
-  to { opacity: 1; }
-`;
-
-const fadeInUp = keyframes`
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
-
 const pulse = keyframes`
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(1.1); }
@@ -38,7 +28,6 @@ const HeroSection = styled.section`
 const HeroContent = styled.div`
   text-align: center;
   max-width: 800px;
-  animation: ${fadeInUp} 0.6s ease-out;
 `;
 
 const AvatarContainer = styled.div`
@@ -46,7 +35,6 @@ const AvatarContainer = styled.div`
   width: 180px;
   height: 180px;
   margin: 0 auto 2rem;
-  animation: ${fadeInUp} 0.6s ease-out;
 `;
 
 const AvatarRing = styled.div`
@@ -104,9 +92,6 @@ const Title = styled.h1`
   font-weight: 800;
   margin-bottom: 1rem;
   line-height: 1.2;
-  animation: ${fadeInUp} 0.6s ease-out;
-  animation-delay: 0.1s;
-  opacity: 0;
 
   @media (max-width: 768px) {
     font-size: 2.5rem;
@@ -129,9 +114,6 @@ const Tagline = styled.p`
   justify-content: center;
   gap: 0.5rem;
   flex-wrap: wrap;
-  animation: ${fadeInUp} 0.6s ease-out;
-  animation-delay: 0.2s;
-  opacity: 0;
 `;
 
 const TaglineIcon = styled.span`
@@ -146,9 +128,6 @@ const Description = styled.p`
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  animation: ${fadeInUp} 0.6s ease-out;
-  animation-delay: 0.3s;
-  opacity: 0;
 `;
 
 const ButtonGroup = styled.div`
@@ -157,9 +136,6 @@ const ButtonGroup = styled.div`
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 3rem;
-  animation: ${fadeInUp} 0.6s ease-out;
-  animation-delay: 0.4s;
-  opacity: 0;
 `;
 
 const PrimaryButton = styled.button`
@@ -214,9 +190,6 @@ const StatsContainer = styled.div`
   backdrop-filter: blur(10px);
   border-radius: 20px;
   border: 1px solid rgba(255, 159, 67, 0.1);
-  animation: ${fadeInUp} 0.6s ease-out;
-  animation-delay: 0.5s;
-  opacity: 0;
 `;
 
 const StatItem = styled.div`
@@ -251,9 +224,6 @@ const ScrollIndicator = styled.div`
   gap: 0.5rem;
   color: #a1a1b0;
   font-size: 0.875rem;
-  animation: ${fadeIn} 1s ease-out;
-  animation-delay: 1.5s;
-  opacity: 0;
 `;
 
 const scrollMouse = keyframes`
@@ -314,9 +284,6 @@ const ModesContainer = styled.div`
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
-  animation: ${fadeInUp} 0.6s ease-out;
-  animation-delay: 0.15s;
-  opacity: 0;
 `;
 
 const ModeChip = styled.span<{ isActive?: boolean }>`
@@ -340,9 +307,6 @@ const ThoughtBubble = styled.div`
   color: #a1a1b0;
   font-style: italic;
   position: relative;
-  animation: ${fadeInUp} 0.6s ease-out;
-  animation-delay: 0.25s;
-  opacity: 0;
   
   &::before {
     content: '💭';
