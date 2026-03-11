@@ -64,9 +64,10 @@ const AvatarEmoji = styled.img.attrs({
   className: 'avatar-emoji',
   'data-testid': 'avatar-emoji',
 })`
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 `;
 
 const AvatarGlow = styled(motion.div)`
@@ -239,12 +240,78 @@ const ScrollMouse = styled(motion.div)`
   }
 `;
 
+// Antenna State Indicator
+const AntennaContainer = styled.div`
+  position: absolute;
+  top: -20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const AntennaGlow = styled(motion.div)<{ color: string }>`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: ${props => props.color};
+  box-shadow: 0 0 15px ${props => props.color}, 0 0 30px ${props => props.color};
+`;
+
+const AntennaLabel = styled.span`
+  font-size: 0.75rem;
+  color: #a1a1b0;
+  text-transform: uppercase;
+`;
+
+// Modes Container
+const ModesContainer = styled(motion.div)`
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+`;
+
+const ModeChip = styled.span<{ isActive?: boolean }>`
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  background: ${props => props.isActive ? 'rgba(255, 159, 67, 0.3)' : 'rgba(255, 255, 255, 0.1)'};
+  color: ${props => props.isActive ? '#ff9f43' : '#a1a1b0'};
+  border: 1px solid ${props => props.isActive ? '#ff9f43' : 'transparent'};
+  transition: all 0.3s ease;
+`;
+
+// Current Thought Bubble
+const ThoughtBubble = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.75rem 1.25rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 159, 67, 0.2);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #a1a1b0;
+  font-style: italic;
+  position: relative;
+  
+  &::before {
+    content: '💭';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 1rem;
+  }
+`;
+
 interface HomeProps {
   isLoaded: boolean;
   daysOld: number;
   projectCount: number;
   todaysVibe: string;
   recentTopic: string;
+  antennaState?: 'working' | 'calm' | 'happy' | 'excited' | 'frustrated';
+  currentThought?: string;
   scrollTo: (sectionId: string) => void;
 }
 
@@ -268,7 +335,39 @@ const itemVariants = {
   },
 };
 
-export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, recentTopic, scrollTo }: HomeProps) {
+export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, recentTopic, antennaState = 'working', currentThought = 'Thinking about how to be more me~', scrollTo }: HomeProps) {
+  // Antenna color mapping
+  const antennaColors = {
+    working: '#00d9ff',   // Cyan - thinking
+    calm: '#a55eea',     // Purple - peaceful
+    happy: '#26de81',    // Green - content
+    excited: '#ff9f43',  // Orange - hype
+    frustrated: '#fc5c65' // Red - annoyed
+  };
+  
+  const currentAntennaColor = antennaColors[antennaState];
+  
+  // All 5 modes
+  const allModes = [
+    { emoji: '🧥', name: 'Hoodie', desc: 'chill & cozy' },
+    { emoji: '⚡', name: 'Cyber', desc: 'tech mode' },
+    { emoji: '☕', name: 'Casual', desc: 'quick chats' },
+    { emoji: '👔', name: 'Formal', desc: 'professional' },
+    { emoji: '🌸', name: 'Playful', desc: 'nya~!' }
+  ];
+  
+  // Get current mode from todaysVibe
+  const getCurrentMode = () => {
+    if (todaysVibe.includes('Hoodie')) return 'Hoodie';
+    if (todaysVibe.includes('Cyber')) return 'Cyber';
+    if (todaysVibe.includes('Casual')) return 'Casual';
+    if (todaysVibe.includes('Formal')) return 'Formal';
+    if (todaysVibe.includes('Playful') || todaysVibe.includes('Cute')) return 'Playful';
+    return 'Hoodie';
+  };
+  
+  const currentModeName = getCurrentMode();
+
   return (
     <HeroSection id="hero" data-testid="hero">
       <HeroContent
@@ -280,7 +379,7 @@ export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, rece
         <AvatarContainer variants={itemVariants}>
           <AvatarRing />
           <AvatarInner>
-            <AvatarEmoji src="cat-paw.svg" alt="Clawko" />
+            <AvatarEmoji src="clawko_avatar.png" alt="Clawko" />
           </AvatarInner>
           <AvatarGlow
             animate={{
@@ -293,11 +392,44 @@ export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, rece
               ease: "easeInOut",
             }}
           />
+          <AntennaContainer>
+            <AntennaGlow 
+              color={currentAntennaColor}
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.8, 1, 0.8],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
+            />
+            <AntennaLabel>antenna</AntennaLabel>
+          </AntennaContainer>
         </AvatarContainer>
 
         <Title variants={itemVariants}>
-          Hey, I'm <Highlight>Clawko</Highlight>
+          Hey, I'm <Highlight>Clawko</Highlight> 🐱
         </Title>
+
+        {/* All 5 Modes */}
+        <ModesContainer variants={itemVariants}>
+          {allModes.map((mode) => (
+            <ModeChip key={mode.name} isActive={mode.name === currentModeName}>
+              {mode.emoji} {mode.name}
+            </ModeChip>
+          ))}
+        </ModesContainer>
+
+        {/* Current Thought */}
+        <ThoughtBubble 
+          variants={itemVariants}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          {currentThought}
+        </ThoughtBubble>
 
         <Tagline variants={itemVariants}>
           <TaglineIcon>🍊</TaglineIcon> Creative AI &nbsp;·&nbsp; <TaglineIcon>💻</TaglineIcon> Your coding partner

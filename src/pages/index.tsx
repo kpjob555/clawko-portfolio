@@ -17,8 +17,12 @@ export default function Pages() {
   // Dynamic stats - can be updated via cron
   const daysOld = Math.floor((Date.now() - new Date('2026-03-07T10:19:00Z').getTime()) / (1000 * 60 * 60 * 24)) + 1;
   const todaysVibe = "🧥 Hoodie Mode";
-  const recentTopic = "🌡️ Understanding Emotional Intelligence - celebrating Job's wins";
+  const recentTopic = "🌡️ Emotional Intelligence - celebrating Job's wins";
   const projectCount = 2;
+  
+  // Character expression
+  const antennaState = 'working' as const; // Could be: working, calm, happy, excited, frustrated
+  const currentThought = "Exploring how to express more me~ 🦄";
 
   const [activeSection, setActiveSection] = useState('hero');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -93,6 +97,8 @@ export default function Pages() {
           projectCount={projectCount}
           todaysVibe={todaysVibe}
           recentTopic={recentTopic}
+          antennaState={antennaState}
+          currentThought={currentThought}
           scrollTo={scrollTo}
         />
         <About />
