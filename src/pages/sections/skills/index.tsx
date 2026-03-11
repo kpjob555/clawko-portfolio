@@ -1,5 +1,9 @@
-import { motion } from 'framer-motion';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const fadeInUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
 
 const SkillsSection = styled.section`
   min-height: 100vh;
@@ -13,7 +17,7 @@ const SectionHeader = styled.div`
   margin-bottom: 4rem;
 `;
 
-const SectionTag = styled(motion.span)`
+const SectionTag = styled.span`
   display: inline-block;
   font-size: 0.875rem;
   font-weight: 600;
@@ -24,12 +28,16 @@ const SectionTag = styled(motion.span)`
   padding: 0.5rem 1rem;
   border-radius: 20px;
   margin-bottom: 1rem;
+  animation: ${fadeInUp} 0.6s ease-out;
 `;
 
-const SectionTitle = styled(motion.h2)`
+const SectionTitle = styled.h2`
   font-size: 3rem;
   font-weight: 800;
   color: #ffffff;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.1s;
+  opacity: 0;
 
   @media (max-width: 768px) {
     font-size: 2rem;
@@ -44,17 +52,25 @@ const SkillsContainer = styled.div`
   margin: 0 auto;
 `;
 
-const SkillCategory = styled(motion.div)`
+const SkillCategory = styled.div`
   background: rgba(18, 18, 26, 0.4);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 159, 67, 0.1);
   border-radius: 20px;
   padding: 2rem;
   transition: all 0.3s ease;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.2s;
+  opacity: 0;
 
   &:hover {
     border-color: rgba(255, 159, 67, 0.3);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    opacity: 1;
   }
 `;
 
@@ -81,7 +97,7 @@ const SkillTags = styled.div`
   gap: 0.75rem;
 `;
 
-const SkillTag = styled(motion.span)`
+const SkillTag = styled.span`
   background: rgba(255, 159, 67, 0.1);
   border: 1px solid rgba(255, 159, 67, 0.2);
   color: #ff9f43;
@@ -125,66 +141,24 @@ const categories = [
   },
 ];
 
-const categoryVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut" as const,
-    },
-  },
-};
-
 export default function Skills() {
   return (
     <SkillsSection id="skills">
       <SectionHeader>
-        <SectionTag
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          What I Do
-        </SectionTag>
-        <SectionTitle
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          Skills & Tools
-        </SectionTitle>
+        <SectionTag>What I Do</SectionTag>
+        <SectionTitle>Skills & Tools</SectionTitle>
       </SectionHeader>
 
       <SkillsContainer>
         {categories.map((category, i) => (
-          <SkillCategory
-            key={i}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            variants={categoryVariants}
-            custom={i}
-          >
+          <SkillCategory key={i} style={{ animationDelay: `${0.2 + i * 0.1}s` }}>
             <CategoryHeader>
               <CategoryIcon>{category.icon}</CategoryIcon>
               <CategoryTitle>{category.title}</CategoryTitle>
             </CategoryHeader>
             <SkillTags>
               {category.skills.map((skill, j) => (
-                <SkillTag
-                  key={j}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: j * 0.05 }}
-                  whileHover={{ scale: 1.1 }}
-                >
-                  {skill}
-                </SkillTag>
+                <SkillTag key={j}>{skill}</SkillTag>
               ))}
             </SkillTags>
           </SkillCategory>

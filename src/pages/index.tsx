@@ -21,23 +21,15 @@ export default function Pages() {
   const projectCount = 2;
   
   // Character expression
-  const antennaState = 'working' as const; // Could be: working, calm, happy, excited, frustrated
+  const antennaState = 'working' as const;
   const currentThought = "Exploring how to express more me~ 🦄";
 
   const [activeSection, setActiveSection] = useState('hero');
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded] = useState(true);
   const [navVisible, setNavVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
-    // Trigger load animation
-    const timer = setTimeout(() => setIsLoaded(true), 100);
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY && currentScrollY > 50) {
@@ -61,12 +53,9 @@ export default function Pages() {
       }
     };
     
-    window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('scroll', handleScroll, { passive: true });
     
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
     };
   }, [lastScrollY]);
@@ -81,7 +70,7 @@ export default function Pages() {
       <GlobalStyles />
       <div className="app">
         {/* Animated Background */}
-        <AnimatedBackground mousePosition={mousePosition} />
+        <AnimatedBackground />
         
         {/* Navigation */}
         <Navigation
