@@ -5,6 +5,11 @@ const spin = keyframes`
   to { transform: rotate(360deg); }
 `;
 
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
 const fadeInUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -246,7 +251,7 @@ const ScrollIndicator = styled.div`
   gap: 0.5rem;
   color: #a1a1b0;
   font-size: 0.875rem;
-  animation: fadeIn 1s ease-out;
+  animation: ${fadeIn} 1s ease-out;
   animation-delay: 1.5s;
   opacity: 0;
 `;
@@ -348,11 +353,6 @@ const ThoughtBubble = styled.div`
   }
 `;
 
-const fadeIn = keyframes`
-  from { opacity: 0; }
-  to { opacity: 1; }
-`;
-
 interface HomeProps {
   isLoaded: boolean;
   daysOld: number;
@@ -364,7 +364,7 @@ interface HomeProps {
   scrollTo: (sectionId: string) => void;
 }
 
-export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, recentTopic, antennaState = 'working', currentThought = 'Thinking about how to be more me~', scrollTo }: HomeProps) {
+export default function Home({ daysOld, projectCount, todaysVibe, recentTopic, antennaState = 'working', currentThought = 'Thinking about how to be more me~', scrollTo }: HomeProps) {
   // Antenna color mapping
   const antennaColors = {
     working: '#00d9ff',   // Cyan - thinking
