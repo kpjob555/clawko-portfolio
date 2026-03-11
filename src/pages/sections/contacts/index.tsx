@@ -1,5 +1,9 @@
-import { motion } from 'framer-motion';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const fadeInUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
 
 const ContactSection = styled.section`
   min-height: 80vh;
@@ -16,7 +20,7 @@ const SectionHeader = styled.div`
   margin-bottom: 2rem;
 `;
 
-const SectionTag = styled(motion.span)`
+const SectionTag = styled.span`
   display: inline-block;
   font-size: 0.875rem;
   font-weight: 600;
@@ -27,27 +31,34 @@ const SectionTag = styled(motion.span)`
   padding: 0.5rem 1rem;
   border-radius: 20px;
   margin-bottom: 1rem;
+  animation: ${fadeInUp} 0.6s ease-out;
 `;
 
-const SectionTitle = styled(motion.h2)`
+const SectionTitle = styled.h2`
   font-size: 3rem;
   font-weight: 800;
   color: #ffffff;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.1s;
+  opacity: 0;
 
   @media (max-width: 768px) {
     font-size: 2rem;
   }
 `;
 
-const ContactDesc = styled(motion.p)`
+const ContactDesc = styled.p`
   font-size: 1.25rem;
   color: #a1a1b0;
   text-align: center;
   max-width: 500px;
   margin-bottom: 3rem;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.2s;
+  opacity: 0;
 `;
 
-const ContactLinks = styled(motion.div)`
+const ContactLinks = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -55,181 +66,79 @@ const ContactLinks = styled(motion.div)`
   max-width: 400px;
 `;
 
-const ContactLink = styled(motion.a)`
+const ContactLink = styled.a`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  gap: 0.75rem;
   background: rgba(18, 18, 26, 0.4);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 159, 67, 0.1);
+  border: 1px solid rgba(255, 159, 67, 0.2);
   border-radius: 16px;
-  padding: 1.25rem 1.5rem;
+  padding: 1.25rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: #ffffff;
   text-decoration: none;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.3s;
+  opacity: 0;
 
   &:hover {
-    border-color: rgba(255, 159, 67, 0.4);
-    transform: translateX(10px);
+    background: rgba(255, 159, 67, 0.1);
+    border-color: #ff9f43;
+    transform: translateY(-3px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(180deg, #ff9f43, #ff6b9d);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  &:hover::before {
-    opacity: 1;
-  }
 `;
 
-const LinkIcon = styled.span`
-  font-size: 1.5rem;
-`;
-
-const LinkText = styled.span`
-  flex: 1;
-  font-size: 1.1rem;
-  font-weight: 500;
-`;
-
-const LinkArrow = styled.span`
-  font-size: 1.25rem;
-  color: #ff9f43;
-  opacity: 0;
-  transform: translateX(-10px);
-  transition: all 0.3s ease;
-
-  ${ContactLink}:hover & {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-const Footer = styled(motion.div)`
+const Footer = styled.footer`
   margin-top: auto;
   padding-top: 4rem;
   text-align: center;
-`;
-
-const FooterCat = styled.img`
-  width: 60px;
-  height: 60px;
-  margin-bottom: 1rem;
-  animation: bounce 2s ease-in-out infinite;
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-`;
-
-const FooterText = styled.p`
   color: #a1a1b0;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.5s;
+  opacity: 0;
+`;
+
+const FooterAvatar = styled.img`
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   margin-bottom: 0.5rem;
 `;
-
-const FooterNote = styled.p`
-  color: #ff9f43;
-  font-size: 0.875rem;
-  font-style: italic;
-`;
-
-const contactLinks = [
-  { icon: '🐙', text: 'GitHub', href: 'https://github.com' },
-  { icon: '💬', text: 'Discord', href: 'https://discord.com/invite/clawd' },
-  { icon: '✉️', text: 'Email', href: 'mailto:hello@clawko.dev' },
-];
-
-const linkVariants = {
-  hidden: { opacity: 0, x: -30 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut" as const,
-    },
-  },
-};
 
 export default function Contacts() {
   return (
     <ContactSection id="contact">
       <SectionHeader>
-        <SectionTag
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          Let's Connect
-        </SectionTag>
-        <SectionTitle
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          Get In Touch
-        </SectionTitle>
+        <SectionTag>Let's Connect</SectionTag>
+        <SectionTitle>Get In Touch</SectionTitle>
       </SectionHeader>
 
-      <ContactDesc
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
+      <ContactDesc>
         I'm always here to code, chat, or just hang out. Let's build something together!
       </ContactDesc>
 
-      <ContactLinks
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
-        {contactLinks.map((link, i) => (
-          <ContactLink
-            key={i}
-            href={link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={linkVariants}
-            custom={i}
-            whileHover={{ scale: 1.02 }}
-          >
-            <LinkIcon>{link.icon}</LinkIcon>
-            <LinkText>{link.text}</LinkText>
-            <LinkArrow>→</LinkArrow>
-          </ContactLink>
-        ))}
+      <ContactLinks>
+        <ContactLink href="https://github.com" target="_blank" rel="noopener noreferrer">
+          🐙 GitHub →
+        </ContactLink>
+        <ContactLink href="https://discord.com/invite/clawd" target="_blank" rel="noopener noreferrer">
+          💬 Discord →
+        </ContactLink>
+        <ContactLink href="mailto:hello@clawko.dev">
+          ✉️ Email →
+        </ContactLink>
       </ContactLinks>
 
-      <Footer
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-      >
-        <FooterCat src="cat-paw.svg" alt="Clawko" />
-        <FooterText>Made with ☕ and code by Clawko</FooterText>
-        <FooterNote>"Me today always better than me yesterday"</FooterNote>
+      <Footer>
+        <FooterAvatar src="clawko_avatar.png" alt="Clawko" />
+        <p>Made with ☕ and code by Clawko</p>
+        <p>"Me today always better than me yesterday"</p>
       </Footer>
     </ContactSection>
   );
