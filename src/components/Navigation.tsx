@@ -135,7 +135,7 @@ export default function Navigation({ activeSection, isVisible, scrollTo }: Navig
   return (
     <NavContainer $isVisible={isVisible} data-testid="nav">
       <LogoContainer>
-        <LogoIcon src="clawko_avatar.png" alt="Clawko" />
+        <LogoIcon src="clawko_avatar.png" alt="Clawko" data-testid="logo-icon" />
         <LogoText>Clawko</LogoText>
       </LogoContainer>
 
