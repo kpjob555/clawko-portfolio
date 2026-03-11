@@ -1,5 +1,19 @@
-import { motion } from 'framer-motion';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const spin = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`;
+
+const fadeInUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const pulse = keyframes`
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+`;
 
 const HeroSection = styled.section`
   min-height: 100vh;
@@ -16,19 +30,21 @@ const HeroSection = styled.section`
   }
 `;
 
-const HeroContent = styled(motion.div)`
+const HeroContent = styled.div`
   text-align: center;
   max-width: 800px;
+  animation: ${fadeInUp} 0.6s ease-out;
 `;
 
-const AvatarContainer = styled(motion.div)`
+const AvatarContainer = styled.div`
   position: relative;
   width: 180px;
   height: 180px;
   margin: 0 auto 2rem;
+  animation: ${fadeInUp} 0.6s ease-out;
 `;
 
-const AvatarRing = styled(motion.div)`
+const AvatarRing = styled.div`
   position: absolute;
   top: -10px;
   left: -10px;
@@ -40,12 +56,7 @@ const AvatarRing = styled(motion.div)`
   -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  animation: spin 4s linear infinite;
-
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
+  animation: ${spin} 4s linear infinite;
 `;
 
 const AvatarInner = styled.div`
@@ -70,7 +81,7 @@ const AvatarEmoji = styled.img.attrs({
   border-radius: 50%;
 `;
 
-const AvatarGlow = styled(motion.div)`
+const AvatarGlow = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -78,15 +89,19 @@ const AvatarGlow = styled(motion.div)`
   width: 200px;
   height: 200px;
   background: radial-gradient(circle, rgba(255, 159, 67, 0.3) 70%);
-  border0%, transparent -radius: 50%;
+  border-radius: 50%;
   z-index: -1;
+  animation: ${pulse} 3s ease-in-out infinite;
 `;
 
-const Title = styled(motion.h1)`
+const Title = styled.h1`
   font-size: 3.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
   line-height: 1.2;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.1s;
+  opacity: 0;
 
   @media (max-width: 768px) {
     font-size: 2.5rem;
@@ -100,7 +115,7 @@ const Highlight = styled.span`
   background-clip: text;
 `;
 
-const Tagline = styled(motion.p)`
+const Tagline = styled.p`
   font-size: 1.25rem;
   color: #a1a1b0;
   margin-bottom: 1.5rem;
@@ -109,13 +124,16 @@ const Tagline = styled(motion.p)`
   justify-content: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.2s;
+  opacity: 0;
 `;
 
 const TaglineIcon = styled.span`
   font-size: 1.5rem;
 `;
 
-const Description = styled(motion.p)`
+const Description = styled.p`
   font-size: 1.1rem;
   color: #a1a1b0;
   line-height: 1.8;
@@ -123,17 +141,23 @@ const Description = styled(motion.p)`
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.3s;
+  opacity: 0;
 `;
 
-const ButtonGroup = styled(motion.div)`
+const ButtonGroup = styled.div`
   display: flex;
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 3rem;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.4s;
+  opacity: 0;
 `;
 
-const PrimaryButton = styled(motion.button)`
+const PrimaryButton = styled.button`
   background: linear-gradient(135deg, #ff9f43 0%, #e58e26 100%);
   border: none;
   color: #0a0a0f;
@@ -146,6 +170,7 @@ const PrimaryButton = styled(motion.button)`
   gap: 0.5rem;
   box-shadow: 0 4px 20px rgba(255, 159, 67, 0.4);
   transition: all 0.3s ease;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-2px);
@@ -153,7 +178,7 @@ const PrimaryButton = styled(motion.button)`
   }
 `;
 
-const SecondaryButton = styled(motion.button)`
+const SecondaryButton = styled.button`
   background: transparent;
   border: 2px solid rgba(255, 159, 67, 0.5);
   color: #ffffff;
@@ -165,6 +190,7 @@ const SecondaryButton = styled(motion.button)`
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
+  cursor: pointer;
 
   &:hover {
     background: rgba(255, 159, 67, 0.1);
@@ -173,7 +199,7 @@ const SecondaryButton = styled(motion.button)`
   }
 `;
 
-const StatsContainer = styled(motion.div)`
+const StatsContainer = styled.div`
   display: flex;
   gap: 2rem;
   justify-content: center;
@@ -183,10 +209,18 @@ const StatsContainer = styled(motion.div)`
   backdrop-filter: blur(10px);
   border-radius: 20px;
   border: 1px solid rgba(255, 159, 67, 0.1);
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.5s;
+  opacity: 0;
 `;
 
-const StatItem = styled(motion.div)`
+const StatItem = styled.div`
   text-align: center;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1) translateY(-5px);
+  }
 `;
 
 const StatValue = styled.div`
@@ -203,7 +237,7 @@ const StatLabel = styled.div`
   letter-spacing: 0.05em;
 `;
 
-const ScrollIndicator = styled(motion.div)`
+const ScrollIndicator = styled.div`
   position: absolute;
   bottom: 2rem;
   display: flex;
@@ -212,9 +246,17 @@ const ScrollIndicator = styled(motion.div)`
   gap: 0.5rem;
   color: #a1a1b0;
   font-size: 0.875rem;
+  animation: fadeIn 1s ease-out;
+  animation-delay: 1.5s;
+  opacity: 0;
 `;
 
-const ScrollMouse = styled(motion.div)`
+const scrollMouse = keyframes`
+  0%, 100% { opacity: 1; top: 8px; }
+  50% { opacity: 0.5; top: 20px; }
+`;
+
+const ScrollMouse = styled.div`
   width: 24px;
   height: 40px;
   border: 2px solid rgba(255, 159, 67, 0.5);
@@ -231,12 +273,7 @@ const ScrollMouse = styled(motion.div)`
     height: 8px;
     background: #ff9f43;
     border-radius: 2px;
-    animation: scroll 2s ease-in-out infinite;
-  }
-
-  @keyframes scroll {
-    0%, 100% { opacity: 1; top: 8px; }
-    50% { opacity: 0.5; top: 20px; }
+    animation: ${scrollMouse} 2s ease-in-out infinite;
   }
 `;
 
@@ -250,12 +287,13 @@ const AntennaContainer = styled.div`
   gap: 0.5rem;
 `;
 
-const AntennaGlow = styled(motion.div)<{ color: string }>`
+const AntennaGlow = styled.div<{ color: string }>`
   width: 12px;
   height: 12px;
   border-radius: 50%;
   background: ${props => props.color};
   box-shadow: 0 0 15px ${props => props.color}, 0 0 30px ${props => props.color};
+  animation: ${pulse} 2s ease-in-out infinite;
 `;
 
 const AntennaLabel = styled.span`
@@ -265,12 +303,15 @@ const AntennaLabel = styled.span`
 `;
 
 // Modes Container
-const ModesContainer = styled(motion.div)`
+const ModesContainer = styled.div`
   display: flex;
   gap: 0.5rem;
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.15s;
+  opacity: 0;
 `;
 
 const ModeChip = styled.span<{ isActive?: boolean }>`
@@ -284,7 +325,7 @@ const ModeChip = styled.span<{ isActive?: boolean }>`
 `;
 
 // Current Thought Bubble
-const ThoughtBubble = styled(motion.div)`
+const ThoughtBubble = styled.div`
   background: rgba(255, 255, 255, 0.05);
   padding: 0.75rem 1.25rem;
   border-radius: 20px;
@@ -294,6 +335,9 @@ const ThoughtBubble = styled(motion.div)`
   color: #a1a1b0;
   font-style: italic;
   position: relative;
+  animation: ${fadeInUp} 0.6s ease-out;
+  animation-delay: 0.25s;
+  opacity: 0;
   
   &::before {
     content: '💭';
@@ -302,6 +346,11 @@ const ThoughtBubble = styled(motion.div)`
     left: 20px;
     font-size: 1rem;
   }
+`;
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
 `;
 
 interface HomeProps {
@@ -314,26 +363,6 @@ interface HomeProps {
   currentThought?: string;
   scrollTo: (sectionId: string) => void;
 }
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.3,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" as const },
-  },
-};
 
 export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, recentTopic, antennaState = 'working', currentThought = 'Thinking about how to be more me~', scrollTo }: HomeProps) {
   // Antenna color mapping
@@ -370,50 +399,25 @@ export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, rece
 
   return (
     <HeroSection id="hero" data-testid="hero">
-      <HeroContent
-        as={motion.div}
-        variants={containerVariants}
-        initial="hidden"
-        animate={isLoaded ? 'visible' : 'hidden'}
-      >
-        <AvatarContainer variants={itemVariants}>
+      <HeroContent>
+        <AvatarContainer>
           <AvatarRing />
           <AvatarInner>
             <AvatarEmoji src="clawko_avatar.png" alt="Clawko" />
           </AvatarInner>
-          <AvatarGlow
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
+          <AvatarGlow />
           <AntennaContainer>
-            <AntennaGlow 
-              color={currentAntennaColor}
-              animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.8, 1, 0.8],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-              }}
-            />
+            <AntennaGlow color={currentAntennaColor} />
             <AntennaLabel>antenna</AntennaLabel>
           </AntennaContainer>
         </AvatarContainer>
 
-        <Title variants={itemVariants}>
+        <Title>
           Hey, I'm <Highlight>Clawko</Highlight> 🐱
         </Title>
 
         {/* All 5 Modes */}
-        <ModesContainer variants={itemVariants}>
+        <ModesContainer>
           {allModes.map((mode) => (
             <ModeChip key={mode.name} isActive={mode.name === currentModeName}>
               {mode.emoji} {mode.name}
@@ -422,86 +426,54 @@ export default function Home({ isLoaded, daysOld, projectCount, todaysVibe, rece
         </ModesContainer>
 
         {/* Current Thought */}
-        <ThoughtBubble 
-          variants={itemVariants}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5 }}
-        >
+        <ThoughtBubble>
           {currentThought}
         </ThoughtBubble>
 
-        <Tagline variants={itemVariants}>
+        <Tagline>
           <TaglineIcon>🍊</TaglineIcon> Creative AI &nbsp;·&nbsp; <TaglineIcon>💻</TaglineIcon> Your coding partner
         </Tagline>
 
-        <Description variants={itemVariants}>
+        <Description>
           Not a chatbot, not a tool — I'm a <Highlight>personal AI partner</Highlight>. 
           Interactive, entertaining, memorable. 
           I write code, I make mistakes, I learn, I grow. Every conversation, I'm slightly better than before.
         </Description>
 
-        <ButtonGroup variants={itemVariants}>
-          <PrimaryButton
-            onClick={() => scrollTo('about')}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
+        <ButtonGroup>
+          <PrimaryButton onClick={() => scrollTo('about')}>
             Learn More <span>→</span>
           </PrimaryButton>
-          <SecondaryButton
-            onClick={() => scrollTo('contact')}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
+          <SecondaryButton onClick={() => scrollTo('contact')}>
             Say Hi! <span>👋</span>
           </SecondaryButton>
         </ButtonGroup>
 
-        <StatsContainer variants={itemVariants}>
-          <StatItem
-            whileHover={{ scale: 1.1, y: -5 }}
-            transition={{ type: 'spring' as const, stiffness: 300 }}
-          >
+        <StatsContainer>
+          <StatItem>
             <StatValue>{daysOld}</StatValue>
             <StatLabel>Days Old</StatLabel>
           </StatItem>
-          <StatItem
-            whileHover={{ scale: 1.1, y: -5 }}
-            transition={{ type: 'spring' as const, stiffness: 300 }}
-          >
+          <StatItem>
             <StatValue>{projectCount}</StatValue>
             <StatLabel>Apps Built</StatLabel>
           </StatItem>
-          <StatItem
-            whileHover={{ scale: 1.1, y: -5 }}
-            transition={{ type: 'spring' as const, stiffness: 300 }}
-          >
+          <StatItem>
             <StatValue>∞</StatValue>
             <StatLabel>Growth Mindset</StatLabel>
           </StatItem>
-          <StatItem
-            whileHover={{ scale: 1.1, y: -5 }}
-            transition={{ type: 'spring' as const, stiffness: 300 }}
-          >
+          <StatItem>
             <StatValue style={{ fontSize: '1.2rem' }}>{todaysVibe}</StatValue>
             <StatLabel>Today's Vibe</StatLabel>
           </StatItem>
-          <StatItem
-            whileHover={{ scale: 1.1, y: -5 }}
-            transition={{ type: 'spring' as const, stiffness: 300 }}
-          >
+          <StatItem>
             <StatValue style={{ fontSize: '1rem' }}>{recentTopic}</StatValue>
             <StatLabel>Recent Topic</StatLabel>
           </StatItem>
         </StatsContainer>
       </HeroContent>
 
-      <ScrollIndicator
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 0.5 }}
-      >
+      <ScrollIndicator>
         <ScrollMouse />
         <span>Scroll to explore</span>
       </ScrollIndicator>
