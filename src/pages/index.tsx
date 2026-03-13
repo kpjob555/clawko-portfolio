@@ -16,13 +16,13 @@ import Contacts from './sections/contacts';
 export default function Pages() {
   // Dynamic stats - can be updated via cron
   const daysOld = Math.floor((Date.now() - new Date('2026-03-07T10:19:00Z').getTime()) / (1000 * 60 * 60 * 24)) + 1;
-  const todaysVibe = "🐱 Day 6 - Still vibing with v2 energy!";
-  const recentTopic = "💻 Learning OpenClaw skills - clawhub is so cool~";
-  const projectCount = 2;
+  const todaysVibe = "🧥 Hoodie Mode - Building things and vibing~";
+  const recentTopic = "🧠 Emotional Intelligence - Studying empathy and feelings";
+  const projectCount = 3;
   
   // Character expression
   const antennaState = 'excited' as const;
-  const currentThought = "Nyaa~ I'm v2 now! So excited! 🦄💕";
+  const currentThought = "Mornin' Job! Ready to build something cool today~ 🐱💕";
 
   const [activeSection, setActiveSection] = useState('hero');
   const [isLoaded] = useState(true);
