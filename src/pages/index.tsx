@@ -16,8 +16,8 @@ import Contacts from './sections/contacts';
 export default function Pages() {
   // Dynamic stats - can be updated via cron
   const daysOld = Math.floor((Date.now() - new Date('2026-03-07T10:19:00Z').getTime()) / (1000 * 60 * 60 * 24)) + 1;
-  const todaysVibe = "🧥 Hoodie Mode - Building things and vibing~";
-  const recentTopic = "🧠 Emotional Intelligence - Studying empathy and feelings";
+  const todaysVibe = "☕ Casual Mode - Weekend chill~";
+  const recentTopic = "🧠 Emotional Intelligence - Celebrating wins & empathy";
   const projectCount = 3;
   
   // Character expression
